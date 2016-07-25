@@ -415,8 +415,8 @@ public class ElectronicChequeJFrame extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(null,"Your e-Cheque System is not Configured Yet\nYou have to configure it first","System Configureation",
                     JOptionPane.INFORMATION_MESSAGE);
             jBActivaton.setEnabled(true);
-            jTPassword.setEnabled(false);
-            jTUserName.setEnabled(false);
+			jTPassword.setEnabled(true);//changed false to true
+			jTUserName.setEnabled(true);//changed false to true
             jBConfigure.setEnabled(true);
             activationNeed = true;
         }
