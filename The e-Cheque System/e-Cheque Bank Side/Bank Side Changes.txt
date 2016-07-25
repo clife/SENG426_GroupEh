@@ -41,11 +41,6 @@ Method: runDB renamed to runDatabase
 Removed redundant if statement from runDatabase (and moved return outside of finally)
 fixed showMessageDialog strings
 **COMMENTED OUT REDUNDANT OPTION FOR runDataBase** (Remove later?)
-----------------
- public boolean runDatabase(int mode, String databaseStatement, double[] balance){
- changed to
- public boolean runDatabase(int mode, String databaseStatement, double balance){
-------------------
 
 EChequeIO:
 Method: savecheque renamed to saveCheque
@@ -59,7 +54,7 @@ Method: setUsername renamed to setUserName
 Method: getUsername renamed to getUserName
 
 Echqueserver:
-Reanmed File to EChequeServer.java
+Renamed File to EChequeServer.java
 Renamed Class to EChequeServer
 Removed Comments
 Removed Unused:
@@ -74,5 +69,4 @@ Removed Unused:
 Method: getsocketStream renamed to getSocketStream
 Method: processConnection removed useless code (and converted if statement to case)
 Method: RunServer removed and replaced contents inside run()
-Field: balanceValue[] converted to just balanceValue (no need for an array)
 	
