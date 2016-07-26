@@ -3,13 +3,8 @@
  *
  * Created on April 27, 2007, 8:38 PM
  *
- * To change this template, choose Tools | Template Manager
- * and open the template in the editor.
- */
-
-/**
- *
  * @author SAAD
+ * 
  */
 
 package eCheque;
@@ -24,215 +19,218 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 
-public class EChequeClient implements Runnable{
-    
-    /** Creates a new instance of EchequeClient */
-
-private Socket ClientConnection;
-private ObjectInputStream SocketInputObject;
-private ObjectOutputStream SocketOutputObject;
-private InputStream SocketInput;
-private OutputStream SocketOutput;
-private DigitalCertificate clientCerit;
-private EChequeRegistration registrationData;
-private ECheque depositCheque;
-private JTextArea screenShell;
-private Key sessionKey;
-private String chequePath;
-private String walletPath;
-private String hostname;
-private int portID;
-private int bankmode;
-private boolean getServerConnection;
-private boolean getSocketConnection;
-private boolean getProcessConnection;
-private boolean bankConnection;
+public class EChequeClient implements Runnable {
+	
+	private Socket clientConnection;
+	private ObjectInputStream socketInputObject;
+	private ObjectOutputStream socketOutputObject;
+	private InputStream socketInput;
+	private OutputStream socketOutput;
+	private DigitalCertificate clientCertificate;
+	private EChequeRegistration registrationData;
+	private ECheque depositCheque;
+	private JTextArea screenShell;
+	private Key sessionKey;
+	private String chequePath;
+	private String walletPath;
+	private String hostname;
+	private int portID;
+	private int bankmode;
+	private boolean getServerConnection;
+	private boolean getSocketConnection;
+	private boolean getProcessConnection;
+	private boolean bankConnection;
 
 
-public EChequeClient(JTextArea screen , DigitalCertificate DC,Key aesKey,String wPath, String cPath, String host, int port){
+	/** Creates a new instance of EchequeClient */
+	public EChequeClient(JTextArea screen, DigitalCertificate DC, Key aesKey, String wPath, String cPath, String host, int port) {
+	    screenShell = screen;
+	    clientCertificate = DC;
+	    sessionKey = aesKey;
+	    walletPath = wPath;
+	    chequePath = cPath;
+	    hostname = host;
+	    portID = port;
+	    screenShell = screen;
+	    getServerConnection = false;
+	    getSocketConnection = false;
+	    getProcessConnection= false;
+	    bankConnection = false;
+	}
 
-    screenShell = screen;
-    clientCerit = DC;
-    sessionKey = aesKey;
-    walletPath = wPath;
-    chequePath = cPath;
-    hostname = host;
-    portID = port;
-    getServerConnection = false;
-    getSocketConnection = false;
-    getProcessConnection= false;
-    bankConnection = false;
+	/** Creates a new instance of EchequeClient */
+	public EChequeClient(int port, int mode, String host, EChequeRegistration register, DigitalCertificate DC) {
+		portID = port;
+		bankmode = mode;
+		hostname = host;
+		registrationData = register;
+		clientCertificate = DC;
+		bankConnection = true;
+	}
+	
+	/** Creates a new instance of EchequeClient */
+	public EChequeClient(int port, int mode, String host,EChequeRegistration register, ECheque chq) {
+		portID = port;
+		bankmode = mode;
+		hostname = host;
+		registrationData = register;
+		depositCheque = chq;
+		bankConnection = true;
+	}     
+	
+	/** Initializes server and triggers connection */
+	private void connectToServer() throws Exception {	    
+		clientConnection = new Socket(InetAddress.getByName(hostname),portID);
+		getServerConnection = true;
+	}
+	
+	/** Gets input data */
+	private void getSocketStream() throws Exception {
+		socketInput = clientConnection.getInputStream() ;
+		socketOutput = clientConnection.getOutputStream();
+		socketOutput.flush();
+		socketInputObject = new ObjectInputStream(clientConnection.getInputStream());
+		socketOutputObject = new ObjectOutputStream(clientConnection.getOutputStream());
+		socketOutputObject.flush();
+		
+		getServerConnection = true;
+	}
+
+	/** Processes server output while session active */
+	private void processConnection() throws IOException,Exception, ClassNotFoundException,
+	NoSuchAlgorithmException, NoSuchPaddingException {
+	
+		DigitalCertificate serverCerit;
+		boolean sessionDone = false;
+		
+		if(!sessionDone) {
+			// Exchange the Digital Certificates
+			socketOutputObject.writeObject(clientCertificate);
+			socketOutputObject.flush();
+			
+			serverCerit = (DigitalCertificate)socketInputObject.readObject();
+			
+			// Send session key
+			Cipher cipher = Cipher.getInstance("RSA");
+			cipher.init(Cipher.WRAP_MODE, serverCerit.getPublicKey());
+			byte[] wrappedKey = cipher.wrap(sessionKey);
+			int keyLength = wrappedKey.length;
+			
+			socketOutputObject.writeInt(keyLength);
+			socketOutputObject.flush();
+			
+			socketOutput.write(wrappedKey);
+			socketOutput.flush();
+			
+			// Send encrypted cheque.
+			FileInputStream cheqOut = new FileInputStream(chequePath);
+			byte[] buffer = new byte[1024];
+			int numread;
+			
+			while( (numread=cheqOut.read(buffer)) >=0 ) {
+				socketOutput.write(buffer, 0, numread);
+			}
+			
+			cheqOut.close(); 
+		}
+		
+		getProcessConnection = true;  
+	}
+		
+	/** Closes one or both active connection(s) */
+	private void closeConnection() {
+		try {
+			if(getSocketConnection) {
+				socketInput.close();
+				socketOutput.close();
+				socketInputObject.close();
+				socketOutputObject.close();
+			} 
+			
+			if(getServerConnection) {
+				clientConnection.close();
+			}
+		} 
+		
+		catch(Exception e) {
+			JOptionPane.showMessageDialog(null, "Illegal close for communication channel", "Connection Error", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	/** Determines bank type; processes bank object to output and other actions */
+	private void processBankConection() throws IOException, ClassNotFoundException {	            
+		String confirm;
+		socketOutputObject.writeObject("Hello");
+		socketOutputObject.flush();
+		socketOutputObject.writeInt(bankmode);
+		socketOutputObject.flush();
+		
+		if(bankmode == 0) {
+			socketOutputObject.writeObject(registrationData);
+			socketOutputObject.flush();
+			socketOutputObject.writeObject(clientCertificate);
+			socketOutputObject.flush();
+			// save registration data.
+			ObjectOutputStream outObj = new ObjectOutputStream(new FileOutputStream("Config.epc"));
+			outObj.writeObject(registrationData);
+			outObj.close();  
+			
+		} else if(bankmode == 1) {
+			socketOutputObject.writeObject(depositCheque);
+			socketOutputObject.flush();
+			socketOutputObject.writeObject(registrationData.getAccountNumber());
+			socketOutputObject.flush();
+			JOptionPane.showMessageDialog(null,"Send info for deposit done");
+		
+		} else if(bankmode == 2) {
+			socketOutputObject.writeObject(depositCheque);
+			socketOutputObject.flush();
+		}
+		
+		confirm = (String)socketInputObject.readObject();
+		JOptionPane.showMessageDialog(null, confirm);
+	}
+
+	/** Determine connection type; connect and process */
+	public void runClient() {    
+		try {
+			if(!bankConnection) {
+				screenShell.append("\n\n>> Connecting to ECheque host");
+			}
+			
+			connectToServer();
+			
+			if(!bankConnection) {
+				screenShell.append("\n\n>> You are connected");
+			}
+			
+			getSocketStream();
+			   
+			if(!bankConnection) {
+				screenShell.append("\n\n>> You are connected");
+			}
+			
+			if(!bankConnection) {
+				screenShell.append("\n\n>> Starting cheque transfer");
+				processConnection();
+			
+			} else {
+				processBankConection();
+			
+			}
+		}
+	
+		catch(Exception error) {
+			JOptionPane.showMessageDialog(null, error.getMessage(), "Connection Error", JOptionPane.ERROR_MESSAGE);
+		}
+		
+		finally {
+			closeConnection();
+		}
+	}
+
+	/** Run client */
+	public void run() {
+		runClient();
+	}
 }
-
-public EChequeClient(int port, int mode, String host, EChequeRegistration register, DigitalCertificate DC){
-        
-     portID = port;
-     bankmode = mode;
-     hostname = host;
-     registrationData = register;
-     clientCerit = DC;
-     bankConnection = true;
-   
-}
-
-public EChequeClient(int port, int mode, String host,EChequeRegistration register, ECheque chq){
-    portID = port;
-    bankmode = mode;
-    hostname= host;
-    registrationData = register;
-    depositCheque = chq;
-    bankConnection = true;
-}     
-
-private void ConnectToServer( ) throws Exception {
-    
-      ClientConnection = new Socket(InetAddress.getByName(hostname),portID);
-      getServerConnection = true;
-}
-
-private void getSocketStream()throws Exception {
-    
-     SocketInput=ClientConnection.getInputStream() ;
-     SocketOutput=ClientConnection.getOutputStream();
-     SocketOutput.flush();
-     SocketInputObject=new ObjectInputStream(ClientConnection.getInputStream());
-     SocketOutputObject=new ObjectOutputStream(ClientConnection.getOutputStream());
-     SocketOutputObject.flush();
-     
-     getServerConnection = true;
- }
-
-private void processConnection()throws IOException,Exception,ClassNotFoundException,
-    NoSuchAlgorithmException,NoSuchPaddingException {
-     
-    DigitalCertificate serverCerit;
-    boolean sessionDone = false;
-        
-        if(!sessionDone){
-             //exchange the Digital Ceritificates
-             SocketOutputObject.writeObject(clientCerit);
-             SocketOutputObject.flush();
-             
-             serverCerit = (DigitalCertificate)SocketInputObject.readObject();
-             
-             //send session key
-             Cipher cipher = Cipher.getInstance("RSA");
-             cipher.init(Cipher.WRAP_MODE, serverCerit.getPublicKey());
-             byte[] wrappedKey = cipher.wrap(sessionKey);
-             int keyLength = wrappedKey.length;
-             
-             SocketOutputObject.writeInt(keyLength);
-             SocketOutputObject.flush();
-             
-             SocketOutput.write(wrappedKey);
-             SocketOutput.flush();
-             
-             //send encrypted cheque.
-             FileInputStream cheqOut = new FileInputStream(chequePath);
-             byte[] buffer = new byte[1024];
-             int numread;
-             while((numread=cheqOut.read(buffer))>=0)
-             {
-                 SocketOutput.write(buffer, 0, numread);
-             }
-             cheqOut.close(); 
-      }
-      
-    getProcessConnection= true;
-        
-}
-
-private void CloseConnection(){
-    try
-    {
-        if(getSocketConnection){
-            SocketInput.close();
-            SocketOutput.close();
-            SocketInputObject.close();
-            SocketOutputObject.close();
-        }
-        if(getServerConnection){
-            ClientConnection.close();
-        }
-    }
-    catch(Exception e)
-    {
-        JOptionPane.showMessageDialog(null,"illegeal close for communication channel","Connection Error",JOptionPane.ERROR_MESSAGE);
-    }
-}
-private void processBankConection()throws IOException, ClassNotFoundException{
-            
-           String confirm;
-           SocketOutputObject.writeObject("Hello");
-           SocketOutputObject.flush();
-           SocketOutputObject.writeInt(bankmode);
-           SocketOutputObject.flush();
-           
-           if(bankmode ==0 ){
-               SocketOutputObject.writeObject(registrationData);
-               SocketOutputObject.flush();
-               SocketOutputObject.writeObject(clientCerit);
-               SocketOutputObject.flush();
-               // save registration data.
-               ObjectOutputStream outObj = new ObjectOutputStream(new FileOutputStream("Config.epc"));
-               outObj.writeObject(registrationData);
-               outObj.close();
-                                                            
-           }
-           if(bankmode==1){
-               SocketOutputObject.writeObject(depositCheque);
-               SocketOutputObject.flush();
-               SocketOutputObject.writeObject(registrationData.getAccountNumber());
-               SocketOutputObject.flush();
-               JOptionPane.showMessageDialog(null,"send info for deposit done");
-               
-           }
-           if(bankmode == 2){
-               SocketOutputObject.writeObject(depositCheque);
-               SocketOutputObject.flush();
-           }
-           confirm = (String)SocketInputObject.readObject();
-           JOptionPane.showMessageDialog(null,confirm);
-    
-}
-
-public void RunClient() 
- {
-     
-    try {
-           
-           if(!bankConnection)
-                screenShell.append("\n\n>> Connecting to echeque host");
-           ConnectToServer ();
-           if(!bankConnection)
-                screenShell.append("\n\n>> you are connected");
-           getSocketStream ();
-           if(!bankConnection)
-                screenShell.append("\n\n>> you are connected");
-           
-           if(!bankConnection){
-               screenShell.append("\n\n>> Starting cheque tarnsfer");
-               processConnection ();
-           }
-           else
-              processBankConection();
-     }
-    
-     catch(Exception error)
-     {
-         JOptionPane.showMessageDialog(null,error.getMessage(),"Connection Error",JOptionPane.ERROR_MESSAGE);
-         
-     }
-     
-     finally
-         {
-             CloseConnection();
-         }
-  }
-
- public void run(){
-    RunClient();
- }
-    
-}
-
