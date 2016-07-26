@@ -516,7 +516,9 @@ public class ChequeJFrame extends javax.swing.JFrame {
 					}
 				}
 				catch(Exception exp){
+					JOptionPane.showMessageDialog(null,"Please load the drawer Digital Certificate", "User Error",
 					JOptionPane.ERROR_MESSAGE);
+
 				}
 			}
 			else{
