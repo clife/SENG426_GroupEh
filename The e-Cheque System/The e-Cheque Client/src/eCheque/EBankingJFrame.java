@@ -19,26 +19,28 @@ import java.io.File;
 
 public class EBankingJFrame extends javax.swing.JFrame {
     
-    private String chequePath;
-    private boolean selectChequeFlag;
-    private EChequeRegisteration registerData;
-    private ECheque depositCheque;
-    /** Creates new form EBankingJFrame */
-    public EBankingJFrame(EChequeRegisteration registerdUser) {
-         try{
-            //TrendyLookAndFeel tlf = new TrendyLookAndFeel();
-            //tlf.setCurrentTheme( new com.Trendy.swing.plaf.Themes.TrendyOrangeTheme());
-            //UIManager.setLookAndFeel(tlf);
-        }
-        catch(Exception e){
-            
-            //JOptionPane.showMessageDialog(null,"System Error", "can not found themes", JOptionPane.ERROR_MESSAGE);
-        
-        }    
-        initComponents();
-        registerData = registerdUser;
-        selectChequeFlag = false;
-    }
+	private String chequePath;
+	private boolean selectChequeFlag;
+	private EChequeRegisteration registerData;
+	private ECheque depositCheque;
+	
+	/** Creates new form EBankingJFrame */
+	public EBankingJFrame(EChequeRegisteration registerdUser) {
+	
+		// Exception block commented out on review 
+		//try{
+		//TrendyLookAndFeel tlf = new TrendyLookAndFeel();
+		//tlf.setCurrentTheme( new com.Trendy.swing.plaf.Themes.TrendyOrangeTheme());
+		//UIManager.setLookAndFeel(tlf);
+		//}
+		//catch(Exception e){
+		//JOptionPane.showMessageDialog(null,"System Error", "can not found themes", JOptionPane.ERROR_MESSAGE);
+		//}
+	
+		initComponents();
+		registerData = registerdUser;
+		selectChequeFlag = false;
+	}
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -186,94 +188,108 @@ public class EBankingJFrame extends javax.swing.JFrame {
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-372)/2, (screenSize.height-317)/2, 372, 317);
     }// </editor-fold>//GEN-END:initComponents
+	 
+	 
+	private void jBSubmitActionPerformed(java.awt.event.ActionEvent evt) {
+		//GEN-FIRST:event_jBSubmitActionPerformed
+		// TODO add your handling code here:
+		String hostName;
 
-    private void jBSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSubmitActionPerformed
-// TODO add your handling code here:
-        String hostName;
-        hostName = jTBankIP.getText();
-        if(hostName.length()!=0){
-            
-            if(selectChequeFlag){             
-                
-                if(jCBDeposit.isSelected()){
-                    Runnable client = new EchequeClient(8189,1,hostName,registerData,depositCheque);
-                    Thread clientThread = new Thread(client);
-                    clientThread.start();
-                }
-                else if(jCBCancel.isSelected())
-                {
-                    Runnable client = new EchequeClient(8189,2,hostName,registerData,depositCheque);
-                    Thread clientThread = new Thread(client);
-                    clientThread.start();
-                }
-                else{
-                    JOptionPane.showMessageDialog(null,"You have to select the operation type","User Error",JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            else{
-               JOptionPane.showMessageDialog(null,"You have to load one of your e-Cheque","User Error",JOptionPane.ERROR_MESSAGE);
-                
-            }
-        }
-        else{
-            JOptionPane.showMessageDialog(null,"You have to enter the bank URl or IP","User Error",JOptionPane.ERROR_MESSAGE);
-        }
-    }//GEN-LAST:event_jBSubmitActionPerformed
+		hostName = jTBankIP.getText();
 
-    private void jCBCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBCancelActionPerformed
-// TODO add your handling code here:
-        jCBDeposit.setSelected(false);
-    }//GEN-LAST:event_jCBCancelActionPerformed
+		if (hostName.length()!=0) {
 
-    private void jCBDepositActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jCBDepositActionPerformed
-// TODO add your handling code here:
-        jCBCancel.setSelected(false);
-    }//GEN-LAST:event_jCBDepositActionPerformed
+			if (selectChequeFlag) {             
 
-    private void jBLoadChequeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBLoadChequeActionPerformed
-// TODO add your handling code here:
-    chequePath = getFileLoaction("Open Saved Cheque"); 
-    if(chequePath.length()!=0){
-        try{
-        EChequeIO loadCheq = new EChequeIO();
-        depositCheque = loadCheq.readcheque(chequePath);
-        selectChequeFlag = true;
-        }
-        catch(IOException exp){
-            JOptionPane.showMessageDialog(null,"can not load the cheque","System Error",JOptionPane.ERROR_MESSAGE);
-            selectChequeFlag = false;
-        }
-        catch(ClassNotFoundException exp){
-            JOptionPane.showMessageDialog(null,"Invaild e-Cheque","Error",JOptionPane.ERROR_MESSAGE);
-            selectChequeFlag = false;
-        }
-    }
-        
-    }//GEN-LAST:event_jBLoadChequeActionPerformed
-      private String getFileLoaction(String dialogTitle){
-    
-        JFileChooser fileChooser = new JFileChooser();
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        
-        fileChooser.setDialogTitle(dialogTitle);
-        int result = fileChooser.showOpenDialog( this );
- 
-        if ( result == JFileChooser.CANCEL_OPTION )
-             return "";
- 
-        File fileName = fileChooser.getSelectedFile();
- 
-         // display error if invalid
-         if ( ( fileName == null ) || ( fileName.getName().equals( "" ) ) )
-         {
-            JOptionPane.showMessageDialog( this, "Invalid File Name",
-              "Invalid File Name", JOptionPane.ERROR_MESSAGE );
-           return "";
-         } 
-         return fileName.getPath();
-      }
-   
-      
+				if (jCBDeposit.isSelected()) {
+					Runnable client = new EchequeClient(8189,1,hostName,registerData,depositCheque);
+					Thread clientThread = new Thread(client);
+					
+					clientThread.start();
+				}
+				else if (jCBCancel.isSelected())
+				{
+					Runnable client = new EchequeClient(8189,2,hostName,registerData,depositCheque);
+					Thread clientThread = new Thread(client);
+					
+					clientThread.start();
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"Please select the operation type","User Error",JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(null,"Please load one of your e-Cheques","User Error",JOptionPane.ERROR_MESSAGE);
+
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(null,"Please enter the bank URL or IP","User Error",JOptionPane.ERROR_MESSAGE);
+		}
+	}//GEN-LAST:event_jBSubmitActionPerformed
+	
+	
+	private void jCBCancelActionPerformed(java.awt.event.ActionEvent evt) {
+		//GEN-FIRST:event_jCBCancelActionPerformed
+		// TODO add your handling code here:
+		jCBDeposit.setSelected(false);
+	}//GEN-LAST:event_jCBCancelActionPerformed
+	
+	
+	private void jCBDepositActionPerformed(java.awt.event.ActionEvent evt) {
+		//GEN-FIRST:event_jCBDepositActionPerformed
+		// TODO add your handling code here:
+		jCBCancel.setSelected(false);
+	}//GEN-LAST:event_jCBDepositActionPerformed
+	
+	
+	private void jBLoadChequeActionPerformed(java.awt.event.ActionEvent evt) {
+		//GEN-FIRST:event_jBLoadChequeActionPerformed
+		// TODO add your handling code here:
+		chequePath = getFileLocation("Open Saved Cheque"); 
+		
+		if(chequePath.length() != 0) {
+			try{
+				EChequeIO loadCheq = new EChequeIO();
+				depositCheque = loadCheq.readcheque(chequePath);
+				selectChequeFlag = true;
+			}
+			catch(IOException exp) {
+				JOptionPane.showMessageDialog(null,"Cannot open the selected file.","System Error",JOptionPane.ERROR_MESSAGE);
+				selectChequeFlag = false;
+			}
+			catch(ClassNotFoundException exp) {
+				JOptionPane.showMessageDialog(null,"File selected is not a valid e-Cheque file.","Error",JOptionPane.ERROR_MESSAGE);
+				selectChequeFlag = false;
+			}
+		}
+	}//GEN-LAST:event_jBLoadChequeActionPerformed
+	
+	
+	private String getFileLocation(String dialogTitle) {
+
+		JFileChooser fileChooser = new JFileChooser();
+		
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fileChooser.setDialogTitle(dialogTitle);
+
+		int result = fileChooser.showOpenDialog( this );
+
+		if ( result == JFileChooser.CANCEL_OPTION ) {
+			return "";
+		}
+
+		File fileName = fileChooser.getSelectedFile();
+
+		// display error if invalid
+		if ( ( fileName == null ) || ( fileName.getName().equals("") ) ) {
+			JOptionPane.showMessageDialog( this, "File name appears to be blank. Please select an e-Cheque file.", "Invalid File Name", JOptionPane.ERROR_MESSAGE );
+			return "";
+		}
+		
+		return fileName.getPath();
+	}
+	
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBLoadCheque;
     private javax.swing.JButton jBSubmit;
@@ -286,5 +302,5 @@ public class EBankingJFrame extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel2;
     private javax.swing.JTextField jTBankIP;
     // End of variables declaration//GEN-END:variables
-    
+	 
 }
