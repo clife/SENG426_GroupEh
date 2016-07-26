@@ -21,31 +21,36 @@ import java.net.ServerSocket;
 
 
 public class ReceiveChequeJFrame extends javax.swing.JFrame {
-    
-     private EChequeRegisteration eChequeReg;
-     private PrivateKey privKey;
-     private ServerSocket serverSocket;
-     private boolean serverStartFlage;
-     
-    /** Creates new form ReceiveChequeJFrame */
-    public ReceiveChequeJFrame(EChequeRegisteration eChqReg, PrivateKey pKey) {
-        
-        try{
-            //TrendyLookAndFeel tlf = new TrendyLookAndFeel();
-            //tlf.setCurrentTheme( new com.Trendy.swing.plaf.Themes.TrendyOrangeTheme());
-            //UIManager.setLookAndFeel(tlf);
-        }
-        catch(Exception e){
-            
-            //JOptionPane.showMessageDialog(null,"System Error", "can not found themes", JOptionPane.ERROR_MESSAGE);
-        
-        }    
-        initComponents();
-        eChequeReg = eChqReg;
-        privKey = pKey;
-        serverStartFlage = false;
-    }
-    
+	
+	private EChequeRegisteration eChequeReg;
+	private PrivateKey privateKey;
+	private ServerSocket serverSocket;
+	private boolean serverStartFlag;
+	
+	/** Creates new form ReceiveChequeJFrame */
+	public ReceiveChequeJFrame(EChequeRegisteration eChqReg, PrivateKey pKey) {
+
+		/*
+		 * Unused exception handling
+		 *
+		try{
+		TrendyLookAndFeel tlf = new TrendyLookAndFeel();
+		tlf.setCurrentTheme( new com.Trendy.swing.plaf.Themes.TrendyOrangeTheme());
+		UIManager.setLookAndFeel(tlf);
+		}
+		catch(Exception e){
+
+		JOptionPane.showMessageDialog(null,"System Error", "can not found themes", JOptionPane.ERROR_MESSAGE);
+		}
+		 */
+		 
+		eChequeReg = eChqReg;
+		privateKey = pKey;
+		serverStartFlag = false;
+		initComponents();
+	}
+	
+	
     /** This method is called from within the constructor to
      * initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is
@@ -172,39 +177,43 @@ public class ReceiveChequeJFrame extends javax.swing.JFrame {
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-466)/2, (screenSize.height-351)/2, 466, 351);
     }// </editor-fold>//GEN-END:initComponents
+	
+	 
+	private void jBRecieveMouseClicked(java.awt.event.MouseEvent evt) {
+		//GEN-FIRST:event_jBRecieveMouseClicked
+		// TODO add your handling code here:
+		try{
+			//Get the sever side digital certificate.
+			DigitalCertificate serverDC = new DigitalCertificate();
+			DigitalCertificateIO readServerDC = new DigitalCertificateIO();
+			serverDC = readServerDC.readDigitalCertificate(eChequeReg.getEWalletLoaction() + "\\Security Tools\\" + eChequeReg.getClientName() + "DigCert.edc");
 
-    private void jBRecieveMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBRecieveMouseClicked
-   // TODO add your handling code here:
-        try{
-            //Get the sever side digital certificate.
-            DigitalCertificate serverDC= new DigitalCertificate();
-            DigitalCertificateIO readServerDC = new DigitalCertificateIO();
-            serverDC = readServerDC.readDigitalCertificate(eChequeReg.getEWalletLoaction()+"\\Security Tools\\"+eChequeReg.getClientName()+"DigCert.edc");
-            
-            //Initialize the server connection.
-            if(!serverStartFlage){
-                serverSocket = new ServerSocket(8189);
-                serverStartFlage = true;
-            }
-            //Start Server Thread.
-            Runnable threadingServer = new Echqueserver(jTServerState,serverDC,eChequeReg.getEWalletLoaction(),privKey,serverSocket);
-            Thread  server = new Thread(threadingServer);
-            server.start();
-                     
-        }   
-        catch(ClassNotFoundException exp){
-            
-        }
-        catch(IOException exp){
-            
-        }
-        
-        
-    }//GEN-LAST:event_jBRecieveMouseClicked
-    
-    /**
-     * @param args the command line arguments
-     */
+			//Initialize the server connection.
+			if(!serverStartFlag){
+				serverSocket = new ServerSocket(8189);
+				serverStartFlag = true;
+			}
+			
+			//Start Server Thread.
+			Runnable threadingServer = new Echqueserver(jTServerState, serverDC, eChequeReg.getEWalletLoaction(), privateKey, serverSocket);
+			Thread server = new Thread(threadingServer);
+			
+			server.start();
+			
+		}
+		catch(ClassNotFoundException exp) {
+			// ACTION MUST BE TAKEN ON CAUGHT EXCEPTION
+		}
+		catch(IOException exp){
+			// ACTION MUST BE TAKEN ON CAUGHT EXCEPTION
+		}
+		
+	}//GEN-LAST:event_jBRecieveMouseClicked
+	
+	
+	/**
+	  * @param args the command line arguments
+	  */
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jBRecieve;
