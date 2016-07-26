@@ -25,28 +25,30 @@ import javax.swing.JFileChooser;
 
 public class ChequeJFrame extends javax.swing.JFrame {
 
-    /** Creates new form ChequeJFrame */
-    private EChequeRegistration eChequeReg;
-    private boolean newChequeFlag;
-    private boolean loadChequeFlag = false;
-    private String signPass;
-    private ECheque oldCheque;
-	 
-    public ChequeJFrame(EChequeRegistration registerUser) {
-            /*try {
-                    //TrendyLookAndFeel tlf = new TrendyLookAndFeel();
-                    //tlf.setCurrentTheme( new com.Trendy.swing.plaf.Themes.TrendyOrangeTheme());
-                    //UIManager.setLookAndFeel(tlf);
-            }
-            catch(Exception e) {
-                    //JOptionPane.showMessageDialog(null,"System Error", "can not found themes", JOptionPane.ERROR_MESSAGE);
-            }*/
-            initComponents();
-            eChequeReg = registerUser;
-
-            // set new cheque status false;
-            newChequeFlag = false;
-    }
+	/** Creates new form ChequeJFrame */
+	private EChequeRegistration eChequeReg;
+	private boolean newChequeFlag;
+	private boolean loadChequeFlag = false;
+	private String signPass;
+	private ECheque oldCheque;
+	
+	
+	public ChequeJFrame(EChequeRegistration registerUser) {
+		/*try {
+		//TrendyLookAndFeel tlf = new TrendyLookAndFeel();
+		//tlf.setCurrentTheme( new com.Trendy.swing.plaf.Themes.TrendyOrangeTheme());
+		//UIManager.setLookAndFeel(tlf);
+		}
+		catch(Exception e) {
+		//JOptionPane.showMessageDialog(null,"System Error", "can not found themes", JOptionPane.ERROR_MESSAGE);
+		}*/
+		initComponents();
+		eChequeReg = registerUser;
+		
+		// set new cheque status false;
+		newChequeFlag = false;
+	}
+	
 	
 	/** This method is called from within the constructor to
 	  * initialize the form.
@@ -480,325 +482,346 @@ public class ChequeJFrame extends javax.swing.JFrame {
 	}//GEN-LAST:event_jMExitChequeFormActionPerformed
 	
 	
-        private void jMVerifyChequeActionPerformed(java.awt.event.ActionEvent evt) {
+	private void jMVerifyChequeActionPerformed(java.awt.event.ActionEvent evt) {
 		//GEN-FIRST:event_jMVerifyChequeActionPerformed
-            // TODO add your handling code here:
-            String certificatePath;		
-            if(loadChequeFlag){			
-                certificatePath = getFileLocation("Load Digital Certificate");   
-                if(certificatePath.length()!=0) {			
-                    String signatureReference = chequeReferenceString(oldCheque);	//get the cheque reference signature. 		
-                    DigitalCertificate drawerDC;    //Create Digital Certificate Object for verification					
-                    DigitalCertificateIO readDC = new DigitalCertificateIO();   // Create Digital Certificate IO to load the Certificate			  
+		// TODO add your handling code here:
+		String certificatePath;
+		
+		if(loadChequeFlag){
+			certificatePath = getFileLocation("Load Digital Certificate");   
+			
+			if(certificatePath.length() != 0) {
+				// Get the cheque reference signature.
+				String signatureReference = chequeReferenceString(oldCheque);
+				// Create Digital Certificate Object for verification
+				DigitalCertificate drawerDC;
+				// Create Digital Certificate IO to load the Certificate
+				DigitalCertificateIO readDC = new DigitalCertificateIO();
+				// Create a Digital signature object.
+				DigitalSignature verfiy = new DigitalSignature();
+				
+				try{
+					boolean verfiySignature;
+					
+					drawerDC = (DigitalCertificate)readDC.readDigitalCertificate(certificatePath);
+					verfiySignature = verfiy.verifySignature(oldCheque.getDrawerSignature(),  signatureReference, drawerDC.getPublicKey());
 
-                    DigitalSignature verfiy = new DigitalSignature();   //Create a Digital signature object.				
-                    try{
-                        boolean verfiySignature;					
-                        drawerDC = (DigitalCertificate)readDC.readDigitalCertificate(certificatePath);
-                        verfiySignature = verfiy.verifySignature(oldCheque.getDrawerSignature(), signatureReference,drawerDC.getPublicKey());
-
-                        if(verfiySignature){
-                            JOptionPane.showMessageDialog(null,"The signature is vaild", "e-Cheque Clear",
-                            JOptionPane.INFORMATION_MESSAGE);
-                        }
-                        else{
-                            JOptionPane.showMessageDialog(null,"The signature is not vaild", "e-Cheque not Clear",
-                            JOptionPane.WARNING_MESSAGE);
-                        }
-                    }
-                    catch(Exception exp){
-                        JOptionPane.showMessageDialog(null,"Digital Certificate Courpted","Unknwon error",JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                else{
-                    JOptionPane.showMessageDialog(null,"You have to load tghe drawer Digital Certificate", "User Error",
-                    JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            else {
-                JOptionPane.showMessageDialog(null,"You have to open cheque", "User Error",
-                JOptionPane.ERROR_MESSAGE);
-            }
+					if(verfiySignature){
+						JOptionPane.showMessageDialog(null,"The signature is valid", "e-Cheque Clear",
+						JOptionPane.INFORMATION_MESSAGE);
+					}
+					else{
+						JOptionPane.showMessageDialog(null,"The signature is not valid", "e-Cheque not Clear",
+						JOptionPane.WARNING_MESSAGE);
+					}
+				}
+				catch(Exception exp){
+					JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			else{
+				JOptionPane.showMessageDialog(null,"Please load the drawer Digital Certificate", "User Error",
+				JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(null,"Please first open an e-Cheque", "User Error",
+			JOptionPane.ERROR_MESSAGE);
+		}
 	}//GEN-LAST:event_jMVerifyChequeActionPerformed
+		
 		
 	private void jBOKMouseClicked(java.awt.event.MouseEvent evt) {
 		//GEN-FIRST:event_jBOKMouseClicked
-            // TODO add your handling code here:
-            char password[] = jTuserSign.getPassword();
-            String passTemp = "";
+		// TODO add your handling code here:
+		char password[] = jTuserSign.getPassword();
+		String passTemp = "";
 
-            if((password.length >=8) && (password.length <16)){
-                for(int i=0; i<password.length; i++){
-                    passTemp+=password[i];
-                }
-                
-                int pad = 16 - password.length; 
-                for(int i=0; i<pad; i++){
-                    passTemp+=password[i];
-                }
-            }            
-            signPass = passTemp;
-            jDSignCheque.setVisible(false);		
+		if((password.length >=8) && (password.length <16)) {
+			for(int i=0; i<password.length; i++) {
+				passTemp += password[i];
+			}
+			
+			int pad = 16 - password.length; 
+			
+			for(int i=0; i<pad; i++){
+				passTemp += password[i];
+			}
+		}
+		signPass = passTemp;
+		jDSignCheque.setVisible(false);
 	}//GEN-LAST:event_jBOKMouseClicked
 	
 	
 	private void jBCancelMouseClicked(java.awt.event.MouseEvent evt) {
 		//GEN-FIRST:event_jBCancelMouseClicked
-            // TODO add your handling code here:		
-            jDSignCheque.setVisible(false);
-            this.setEnabled(true);		
+		// TODO add your handling code here:
+		jDSignCheque.setVisible(false);
+		this.setEnabled(true);
 	}//GEN-LAST:event_jBCancelMouseClicked
 	
 	
-        private void jMSaveChequeActionPerformed(java.awt.event.ActionEvent evt) {
+	private void jMSaveChequeActionPerformed(java.awt.event.ActionEvent evt) {
 		//GEN-FIRST:event_jMSaveChequeActionPerformed
-            // TODO add your handling code here:
-            String amount;
-            String payTo;
-            String day;
-            String month;
-            String year;
-            boolean guaranteed = false;
+		// TODO add your handling code here:
+		String amount;
+		String payTo;
+		String day;
+		String month;
+		String year;
+		boolean guaranteed = false;
 
-            // get cheque info to save it.
-            amount = jTAmount.getText();
-            payTo = jTPayTo.getText();
-            day = jTDay.getText();
-            month = jTMonth.getText();
-            year = jTYear.getText();
+		// get cheque info to save it.
+		amount = jTAmount.getText();
+		payTo = jTPayTo.getText();
+		day = jTDay.getText();
+		month = jTMonth.getText();
+		year = jTYear.getText();
 
-            if(jCGranteed.isSelected()){
-                guaranteed = true;
-            }
+		if(jCGranteed.isSelected()){
+			guaranteed = true;
+		}
 
-// validate the cheque data before saving it
-            if(newChequeFlag){
-                if(amount.length()!=0){
-                    if(payTo.length()!=0){
-                        if((day.length()!=0) && (month.length()!=0) && (year.length()!=0)){
-                            // Ask the user to enter his password to sign the cheque with his private key
-                            getSignature();
-                            if(signPass.hashCode() == eChequeReg.getPasword()) {                                
-                                ECheque eCheque = new ECheque();
-                                try{                                    
-                                    // Create AES Key with user password and cipher  
-                                    AESCrypt aesCrypt = new AESCrypt();
-                                    Key AES128 = aesCrypt.initializeAESKeyByPassword(signPass);
-                                    Cipher cipher = aesCrypt.initializeCipher(AES128,1);
-                                    InputStream inputStream = new FileInputStream(eChequeReg.getEWalletLocation() + "\\Security Tools\\Private Key.key");
-                                    OutputStream outputStream = new FileOutputStream(eChequeReg.getEWalletLocation() + "\\Security Tools\\PrivateKey.key");
+		// validate the cheque data before saving it
+		if(newChequeFlag){
+			if(amount.length()!=0){
+				if(payTo.length()!=0){
+					if((day.length()!=0) && (month.length()!=0) && (year.length()!=0)){
+						// Ask the user to enter his password to sign the cheque with his private key
+						getSignature();
+						
+						if(signPass.hashCode() == eChequeReg.getPasword()) {
+							ECheque eCheque = new ECheque();
+							
+							try {                                    
+								// Create AES Key with user password and cipher  
+								AESCrypt aesCrypt = new AESCrypt();
+								Key AES128 = aesCrypt.initializeAESKeyByPassword(signPass);
+								Cipher cipher = aesCrypt.initializeCipher(AES128,1);
+								InputStream inputStream = new FileInputStream(eChequeReg.getEWalletLocation() + "\\Security Tools\\Private Key.key");
+								OutputStream outputStream = new FileOutputStream(eChequeReg.getEWalletLocation() + "\\Security Tools\\PrivateKey.key");
 
-                                    // Decrypt the private key with the AES key and delete the plain key
-                                    aesCrypt.crypt(inputStream, outputStream, cipher);
-                                    inputStream.close();
-                                    outputStream.close();
-                                    
-                                    ObjectInputStream objInputStream = new ObjectInputStream (new FileInputStream(eChequeReg.getEWalletLocation() + "\\Security Tools\\PrivateKey.key"));
+								// Decrypt the private key with the AES key and delete the plain key
+								aesCrypt.crypt(inputStream, outputStream, cipher);
+								inputStream.close();
+								outputStream.close();
 
-                                    // Load the user private key.
-                                    PrivateKey privateKey = (PrivateKey)objInputStream.readObject();
-                                    objInputStream.close();
+								ObjectInputStream objInputStream = new ObjectInputStream (new FileInputStream(eChequeReg.getEWalletLocation() + "\\Security Tools\\PrivateKey.key"));
 
-                                    // Delete the insecure key.
-                                    File control = new File(eChequeReg.getEWalletLocation() + "\\Security Tools\\PrivateKey.key");
-                                    control.delete();
-                                    JOptionPane.showMessageDialog(null, "Load private key");
+								// Load the user private key.
+								PrivateKey privateKey = (PrivateKey)objInputStream.readObject();
+								objInputStream.close();
 
-                                    // Fill the Cheque Data
-                                    eCheque.setAccountNumber(eChequeReg.getAccountNumber());
-                                    eCheque.setAccountHolder(eChequeReg.getClientName());
-                                    eCheque.setBankName(eChequeReg.getBankName());
-                                    eCheque.setChequeNumber(jLSerialNumber.getText());
-                                    eCheque.setCurrencyType("US $");
-                                    eCheque.setAmountOfMoney(jTAmount.getText());
-                                    eCheque.setEarnDay(year + "," + month + "," + day);
-                                    eCheque.setPayToOrderOf(payTo);
-                                    eCheque.setGuaranteed(guaranteed);
+								// Delete the insecure key.
+								File control = new File(eChequeReg.getEWalletLocation() + "\\Security Tools\\PrivateKey.key");
+								control.delete();
+								JOptionPane.showMessageDialog(null, "Load private key");
 
-                                    // Get cheque reference string and sign it.
-                                    String chequeRef = chequeReferenceString(eCheque);
-                                    DigitalSignature digitalSign = new DigitalSignature();
-                                    eCheque.setDrawerSignature(digitalSign.signature(chequeRef, privateKey));
-                                    JOptionPane.showMessageDialog(null,"Sign Complete");
+								// Fill the Cheque Data
+								eCheque.setAccountNumber(eChequeReg.getAccountNumber());
+								eCheque.setAccountHolder(eChequeReg.getClientName());
+								eCheque.setBankName(eChequeReg.getBankName());
+								eCheque.setChequeNumber(jLSerialNumber.getText());
+								eCheque.setCurrencyType("US $");
+								eCheque.setAmountOfMoney(jTAmount.getText());
+								eCheque.setEarnDay(year + "," + month + "," + day);
+								eCheque.setPayToOrderOf(payTo);
+								eCheque.setGuaranteed(guaranteed);
 
-                                    //Save the cheque after you sign it
-                                    EChequeIO drawCheque = new EChequeIO();
-                                    drawCheque.saveCheque(eCheque, eChequeReg.getEWalletLocation() + "\\My Cheques\\"+ eCheque.getChequeNumber() + ".sec");
-                                    JOptionPane.showMessageDialog(null,"Done");
-                                }
-                                catch(Exception exp){
-                                    JOptionPane.showMessageDialog(null,exp.getMessage(),"System error",
-                                    JOptionPane.ERROR_MESSAGE);
-                                }
-                            }
-                            else{
-                                JOptionPane.showMessageDialog(null,"Password is incorrect","User Error",
-                                JOptionPane.ERROR_MESSAGE);
-                            }
-                        }
-                        else{
-                            JOptionPane.showMessageDialog(null,"Earn Date info missing","User Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
-                    else{
-                        JOptionPane.showMessageDialog(null,"Please specify the Cheque Receiver","User Error", JOptionPane.ERROR_MESSAGE);
-                    }
-                }
-                else{
-                    JOptionPane.showMessageDialog(null,"Cheque Amount is zero","User Error",
-                    JOptionPane.ERROR_MESSAGE);
-                }
-            }
-            else{
-                JOptionPane.showMessageDialog(null,"Please create a new cheque","User Error",
-                JOptionPane.ERROR_MESSAGE);
-            }
+								// Get cheque reference string and sign it.
+								String chequeRef = chequeReferenceString(eCheque);
+								DigitalSignature digitalSign = new DigitalSignature();
+								eCheque.setDrawerSignature(digitalSign.signature(chequeRef, privateKey));
+								JOptionPane.showMessageDialog(null, "Signing complete");
+
+								//Save the cheque after you sign it
+								EChequeIO drawCheque = new EChequeIO();
+								drawCheque.saveCheque(eCheque, eChequeReg.getEWalletLocation() + "\\My Cheques\\"+ eCheque.getChequeNumber() + ".sec");
+								JOptionPane.showMessageDialog(null, "Done");
+							}
+							catch(Exception exp) {
+								// 'SYSTEM ERROR' IS NOT DESCRIPTIVE
+								JOptionPane.showMessageDialog(null,exp.getMessage(),"System error",
+								JOptionPane.ERROR_MESSAGE);
+							}
+						}
+						else {
+							JOptionPane.showMessageDialog(null,"Password is incorrect","User Error",
+							JOptionPane.ERROR_MESSAGE);
+						}
+					}
+					else {
+						JOptionPane.showMessageDialog(null,"Earn Date info missing","User Error", JOptionPane.ERROR_MESSAGE);
+					}
+				}
+				else {
+					JOptionPane.showMessageDialog(null,"Please specify the Cheque Receiver","User Error", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+			else {
+				JOptionPane.showMessageDialog(null,"Cheque Amount is zero","User Error",
+				JOptionPane.ERROR_MESSAGE);
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(null,"Please create a new cheque","User Error",
+			JOptionPane.ERROR_MESSAGE);
+		}
 	}//GEN-LAST:event_jMSaveChequeActionPerformed
-		
+	
+	
 	private void jMNewChequeActionPerformed(java.awt.event.ActionEvent evt) {
 		//GEN-FIRST:event_jMNewChequeActionPerformed
-            // Active cheque form
-            jTAmount.setEditable(true);
-            jTPayTo.setEditable(true);
-            jTYear.setEditable(true);
-            jTMonth.setEditable(true);
-            jTDay.setEditable(true);
-            jCGranteed.setEnabled(true);
-
-            //set the user registeration data on the form
-            jLDrawerName.setText(eChequeReg.getClientName());
-            jLBankName.setText("Bank Name: " + eChequeReg.getBankName());
-            jLAccountNum.setText("Account no: " + eChequeReg.getAccountNumber());
-
-            //Generate the cheque serial number
-            jLSerialNumber.setText(generateSerialNumber()); 
-
-            //Set check issue date
-            jLDate.setText("Date: " + currentDate());
-
-            // clear any old data
-            jTAmount.setText("");
-            jTPayTo.setText("");
-            jTDay.setText("");
-            jTMonth.setText("");
-            jTYear.setText("");
-            jCGranteed.setSelected(false);
-
-            newChequeFlag = true;
+		// Active cheque form
+		jTAmount.setEditable(true);
+		jTPayTo.setEditable(true);
+		jTYear.setEditable(true);
+		jTMonth.setEditable(true);
+		jTDay.setEditable(true);
+		jCGranteed.setEnabled(true);
+		
+		//set the user registeration data on the form
+		jLDrawerName.setText(eChequeReg.getClientName());
+		jLBankName.setText("Bank Name: " + eChequeReg.getBankName());
+		jLAccountNum.setText("Account no: " + eChequeReg.getAccountNumber());
+		
+		//Generate the cheque serial number
+		jLSerialNumber.setText(generateSerialNumber()); 
+		
+		//Set check issue date
+		jLDate.setText("Date: " + currentDate());
+		
+		// clear any old data
+		jTAmount.setText("");
+		jTPayTo.setText("");
+		jTDay.setText("");
+		jTMonth.setText("");
+		jTYear.setText("");
+		jCGranteed.setSelected(false);
+		
+		newChequeFlag = true;
 	}//GEN-LAST:event_jMNewChequeActionPerformed
 	
 	
 	private void jMOpenChequeActionPerformed(java.awt.event.ActionEvent evt) {
 		//GEN-FIRST:event_jMOpenChequeActionPerformed
-            String chequePath;
-            chequePath = getFileLocation("Open Cheque");
+		String chequePath;
+		chequePath = getFileLocation("Open Cheque");
 
-            if(chequePath.length() != 0){
-                oldCheque = new ECheque();
-                EChequeIO loadCheque = new EChequeIO();
-
-                try{
-                        // load cheque that already exist
-                        oldCheque = loadCheque.readCheque(chequePath);
-                        jLDrawerName.setText(oldCheque.getAccountHolder());
-                        jLBankName.setText("Bank Name: "+oldCheque.getBankName());
-                        jLAccountNum.setText("Account no: "+oldCheque.getAccountNumber());
-
-                        // to get the earn date
-                        String []earnDate = oldCheque.getEarnDay().split(",");
-                        jTYear.setText(earnDate[0]);
-                        jTYear.setEditable(false);
-                        jTMonth.setText(earnDate[1]);
-                        jTMonth.setEditable(false);
-                        jTDay.setText(earnDate[2]);
-                        jTDay.setEditable(false);
-
-                        jTPayTo.setText(oldCheque.getPayToOrderOf());
-                        jTPayTo.setEditable(false);
-
-                        jTAmount.setText(oldCheque.getMoney());
-                        jTAmount.setEditable(false);
-
-                        if(oldCheque.getGuaranteed()){
-                                jCGranteed.setSelected(true);
-                                jCGranteed.setEnabled(false);
-                        }
-                        jLSerialNumber.setText(oldCheque.getChequeNumber());
-                        jLDate.setText("Date: "+currentDate());
-
-                        loadChequeFlag = true;
-                }
-                catch(Exception exp){
-                        JOptionPane.showMessageDialog(null,"Invaild Cheque","Security Warning",JOptionPane.WARNING_MESSAGE);
-                }
-            }
+		if(chequePath.length() != 0) {
+			oldCheque = new ECheque();
+			EChequeIO loadCheque = new EChequeIO();
+			
+			try {
+				// load cheque that already exists
+				oldCheque = loadCheque.readCheque(chequePath);
+				jLDrawerName.setText(oldCheque.getAccountHolder());
+				jLBankName.setText("Bank Name: " + oldCheque.getBankName());
+				jLAccountNum.setText("Account no: " + oldCheque.getAccountNumber());
+				
+				// get the earn date
+				String []earnDate = oldCheque.getEarnDay().split(",");
+				jTYear.setText(earnDate[0]);
+				jTYear.setEditable(false);
+				jTMonth.setText(earnDate[1]);
+				jTMonth.setEditable(false);
+				jTDay.setText(earnDate[2]);
+				jTDay.setEditable(false);
+				
+				jTPayTo.setText(oldCheque.getPayToOrderOf());
+				jTPayTo.setEditable(false);
+				
+				jTAmount.setText(oldCheque.getMoney());
+				jTAmount.setEditable(false);
+				
+				if(oldCheque.getGuaranteed()) {
+					jCGranteed.setSelected(true);
+					jCGranteed.setEnabled(false);
+				}
+				jLSerialNumber.setText(oldCheque.getChequeNumber());
+				jLDate.setText("Date: " + currentDate());
+				
+				loadChequeFlag = true;
+			}
+			catch(Exception exp) {
+				JOptionPane.showMessageDialog(null,"Invalid Cheque","Security Warning",JOptionPane.WARNING_MESSAGE);
+			}
+		}
 	}//GEN-LAST:event_jMOpenChequeActionPerformed
+	
+	
+	private String getFileLocation(String filePath){
 		
-    private String getFileLocation(String filePath){
-
-        JFileChooser fileChooser = new JFileChooser();
-        int result = fileChooser.showOpenDialog(this);
-
-        fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setDialogTitle(filePath);
-
-        if (result == JFileChooser.CANCEL_OPTION) 
-            return "";		
-
-        File fileName = fileChooser.getSelectedFile();
-
-        // display error if invalid
-        if ((fileName == null ) || ( fileName.getName().equals( "" ))) {
-                JOptionPane.showMessageDialog( this, "Invalid File Name", "Invalid File Name", JOptionPane.ERROR_MESSAGE );
-                return "";
-        }
-        return fileName.getPath();
-    }
-    
-    private String generateSerialNumber(){
-        
-        String serialNumber=""; 
-        GregorianCalendar calender = new GregorianCalendar();
-
-        serialNumber += calender.get(calender.DAY_OF_MONTH);
-        serialNumber += calender.get(calender.MONTH);
-        serialNumber += calender.get(calender.YEAR)+"  ";
-        serialNumber += calender.get(calender.HOUR_OF_DAY);
-        serialNumber += calender.get(calender.MINUTE)+" ";
-        serialNumber += calender.get(calender.SECOND);
-        serialNumber += calender.get(calender.MILLISECOND);
-
-        return serialNumber;        
-    }	
+		JFileChooser fileChooser = new JFileChooser();
+		int result = fileChooser.showOpenDialog(this);
+		
+		fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+		fileChooser.setDialogTitle(filePath);
+		
+		if (result == JFileChooser.CANCEL_OPTION) {
+			return "";
+		}
+		
+		File fileName = fileChooser.getSelectedFile();
+		
+		// Display error if file name is invalid
+		if ((fileName == null ) || ( fileName.getName().equals( "" ))) {
+			JOptionPane.showMessageDialog( this, "Blank file name entered", "Invalid File Name", JOptionPane.ERROR_MESSAGE );
+			
+			return "";
+		}
+		
+		return fileName.getPath();
+	}
 	
-    private String currentDate() {
-        
-        String currentDateInfo=""; 
-        GregorianCalendar calender = new GregorianCalendar();
-
-        currentDateInfo += calender.get(calender.DAY_OF_MONTH)+" - ";
-        currentDateInfo += calender.get(calender.MONTH)+ 1 + " - ";
-        currentDateInfo += calender.get(calender.YEAR);
-
-        return currentDateInfo;
-    }
 	
-    private void getSignature() {
-        signPass="";
-        java.awt.Dimension screenSize =java.awt.Toolkit.getDefaultToolkit().getScreenSize();
-        jDSignCheque.setBounds((screenSize.width-300)/2, (screenSize.height-150)/2, 300, 150); 
-        jDSignCheque.setVisible(true);
-    }
-    
-    private String chequeReferenceString(ECheque eCheque){
-        
-        String reference;
-        reference = eCheque.getAccountNumber() + eCheque.getAccountHolder()+eCheque.getBankName();
-        reference += eCheque.getChequeNumber() + eCheque.getMoney() + eCheque.getCurrencyType();
-        reference += eCheque.getEarnDay() + eCheque.getGuaranteed() + eCheque.getPayToOrderOf();
-       
-        return reference;    
-    }
+	private String generateSerialNumber(){
+		
+		String serialNumber=""; 
+		GregorianCalendar calender = new GregorianCalendar();
+		
+		serialNumber += calender.get(calender.DAY_OF_MONTH);
+		serialNumber += calender.get(calender.MONTH);
+		serialNumber += calender.get(calender.YEAR) + "  ";
+		serialNumber += calender.get(calender.HOUR_OF_DAY);
+		serialNumber += calender.get(calender.MINUTE) + " ";
+		serialNumber += calender.get(calender.SECOND);
+		serialNumber += calender.get(calender.MILLISECOND);
+		
+		return serialNumber;        
+	}
+	
+	
+	private String currentDate() {
+		
+		String currentDateInfo=""; 
+		GregorianCalendar calender = new GregorianCalendar();
+		
+		currentDateInfo += calender.get(calender.DAY_OF_MONTH) + " - ";
+		currentDateInfo += calender.get(calender.MONTH) + 1 + " - ";
+		currentDateInfo += calender.get(calender.YEAR);
+		
+		return currentDateInfo;
+	}
+	
+	
+	private void getSignature() {
+		signPass = "";
+		java.awt.Dimension screenSize =java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+		jDSignCheque.setBounds((screenSize.width - 300) / 2, (screenSize.height - 150) / 2, 300, 150); 
+		jDSignCheque.setVisible(true);
+	}
+	
+	
+	private String chequeReferenceString(ECheque eCheque){
+		String reference;
+		reference = eCheque.getAccountNumber() + eCheque.getAccountHolder() + eCheque.getBankName();
+		reference += eCheque.getChequeNumber() + eCheque.getMoney() + eCheque.getCurrencyType();
+		reference += eCheque.getEarnDay() + eCheque.getGuaranteed() + eCheque.getPayToOrderOf();
+		
+		return reference;    
+	}
+	
 	
 	// Variables declaration - do not modify//GEN-BEGIN:variables
 	private javax.swing.JButton jBCancel;
