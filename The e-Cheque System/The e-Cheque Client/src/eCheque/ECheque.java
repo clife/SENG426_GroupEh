@@ -1,160 +1,106 @@
 /*
- * cheque.java
+ * ECheque.java
  *
  * Created on March 27, 2007, 10:33 PM
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
- */
-
-/**
  *
  * @author Basel
+ * Fixed & Updated July 25th, 2016
+ * By Tristan Lucas
  */
+
 package eCheque;
 
 import java.io.Serializable;
 
 //this class  for inter data cheque form user
-public class ECheque implements Serializable
-{
-     private String accountholder;
+public class ECheque implements Serializable {
+    
+     private String accountHolder;
      private String accountNumber;
-     private String bankname;
+     private String bankName;
      private String payToOrderOf ;
-     private String amountofMony;
-     private String currencytype;
+     private String amountOfMoney;
+     private String currencyType;
      private String chequeNumber;
      private boolean guaranteed;
-     private String earnday;
-     private byte[] banksignature;
-     private byte[] drawersiganure;
-     
-     
-     
-     
+     private String earnDay;
+     private byte[] bankSignature;
+     private byte[] drawerSignature;     
      
      //to ener data we use set function 
     /** Creates a new instance of ECheque */
-    public ECheque() {
-        
+    public ECheque() {        
     }
     
-    public void setaccountholder(String x)
-    {
-        accountholder = x;
-     
+    public void setAccountHolder(String accountHolder) {
+        this.accountHolder = accountHolder;     
     }
-    public void setaccountNumber(String y)
-    {
-        accountNumber=y;
+    public void setAccountNumber(String accountNumber) {
+        this.accountNumber = accountNumber;
     }
+    public void setBankName(String bankName) {
+        this.bankName = bankName;        
+    }  
+    public void setPayToOrderOf(String payToOrderOf) {
+        this.payToOrderOf = payToOrderOf;        
+    }    
+    public void setAmountOfMoney(String amountOfMoney) {
+        this.amountOfMoney = amountOfMoney;
+    }    
+    public void setCurrencyType(String currencyType) {
+        this.currencyType = currencyType;        
+    }
+    public void setChequeNumber(String chequeNumber) {
+        this.chequeNumber = chequeNumber;
+    }
+    public void setGuaranteed(boolean guaranteed) {
+        this.guaranteed = guaranteed;        
+    }
+    public void setEarnDay(String earnDay) {
+        this.earnDay = earnDay;     
+    }
+    public void setBankSignature(byte[] bankSignature) {
+        this.bankSignature = bankSignature;     
+    }    
+    public void setDrawerSignature(byte[] drawerSignature) {
+        this.drawerSignature = drawerSignature;     
+    }   
     
-    
-    public void setbankname(String z)
-    {
-        bankname=z;
-        
-    }
-  
-    public void setpayToOrderOf(String m)
-    {
-        payToOrderOf=m;
-        
-    }
-    
-    public void setamountofMony(String s){
-        amountofMony = s;
-    }
-    
-    public void setcurrencytype(String n)
-    {
-        currencytype=n;
-        
-    }
-    public void setchequeNumber(String c)
-    {
-        chequeNumber=c;
-    }
-    public void setguaranteed(boolean s)
-    {
-        guaranteed=s;
-        
-    }
-    public void setearnday(String u)
-    {
-        earnday= u;
-     
-    }
-
-    
-    public void setbanksignature(byte[] y)
-    {
-        banksignature = y;
-     
-    } 
-   
-   public void setdrawersiganure(byte[] y)
-    {
-        drawersiganure = y;
-     
-    } 
-      
-     
-     
-     
     //to extracting data we use get function;
-    public String getMoney()
-    {
-        return amountofMony;
+    public String getMoney() {
+        return amountOfMoney;
     }
-    public String getaccountholder()
-    {
-        return accountholder;
+    public String getAccountHolder() {
+        return accountHolder;
     }
-    public String getaccountNumber()
-    {
-       return accountNumber;
+    public String getAccountNumber() {
+        return accountNumber;
     }
-    public String getbankname()
-    {
-         return bankname ;  
+    public String getBankName() {
+        return bankName ;  
+    }        
+    public String getPayToOrderOf() {
+        return payToOrderOf;   
+    }    
+    public String getCurrencyType() {
+        return currencyType;   
     }
-        
-    public String getpayToOrderOf()
-    {
-       return  payToOrderOf;   
-    }
-    
-    public String getcurrencytype()
-    {
-        return currencytype;   
-    }
-    
-    public String getchequeNumber()
-    {
+    public String getChequeNumber() {
         return chequeNumber;
-    }
-    
-  
-    public boolean getguaranteed()
-    {
-        
+    } 
+    public boolean getGuaranteed() {        
         return guaranteed ;
     }
-    public String getearnday()
-    {
-        return  earnday;
-    }
-    
-     public byte[]  getbanksignature()
-    {
-        return  banksignature;
-    }
-    
-    public byte[]  getdrawersiganure()
-    {
-        return  drawersiganure;
-    }
-   
+    public String getEarnDay() {
+        return earnDay;
+    }    
+    public byte[] getBankSignature() {
+        return  bankSignature;
+    }    
+    public byte[] getDrawerSignature() {
+        return drawerSignature;
+    }   
 }

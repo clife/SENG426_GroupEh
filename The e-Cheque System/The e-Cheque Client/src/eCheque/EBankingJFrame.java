@@ -21,11 +21,11 @@ public class EBankingJFrame extends javax.swing.JFrame {
     
 	private String chequePath;
 	private boolean selectChequeFlag;
-	private EChequeRegisteration registerData;
+	private EChequeRegistration registerData;
 	private ECheque depositCheque;
 	
 	/** Creates new form EBankingJFrame */
-	public EBankingJFrame(EChequeRegisteration registerdUser) {
+	public EBankingJFrame(EChequeRegistration registerdUser) {
 	
 		// Exception block commented out on review 
 		//try{
@@ -202,14 +202,14 @@ public class EBankingJFrame extends javax.swing.JFrame {
 			if (selectChequeFlag) {             
 
 				if (jCBDeposit.isSelected()) {
-					Runnable client = new EchequeClient(8189,1,hostName,registerData,depositCheque);
+					Runnable client = new EChequeClient(8189,1,hostName,registerData,depositCheque);
 					Thread clientThread = new Thread(client);
 					
 					clientThread.start();
 				}
 				else if (jCBCancel.isSelected())
 				{
-					Runnable client = new EchequeClient(8189,2,hostName,registerData,depositCheque);
+					Runnable client = new EChequeClient(8189,2,hostName,registerData,depositCheque);
 					Thread clientThread = new Thread(client);
 					
 					clientThread.start();
@@ -251,7 +251,7 @@ public class EBankingJFrame extends javax.swing.JFrame {
 		if(chequePath.length() != 0) {
 			try{
 				EChequeIO loadCheq = new EChequeIO();
-				depositCheque = loadCheq.readcheque(chequePath);
+				depositCheque = loadCheq.readCheque(chequePath);
 				selectChequeFlag = true;
 			}
 			catch(IOException exp) {

@@ -2,6 +2,11 @@
  * EChequeBankServer.java
  *
  * Created on June 6, 2007, 2:11 PM
+ *
+ * @author Saad
+ *
+ * Fixed & Updated July 25th, 2016
+ * By Tristan Lucas
  */
 
 package eCheque;
@@ -9,16 +14,13 @@ package eCheque;
 import java.io.IOException;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Saad
- */
-public class EChequeBankServer extends javax.swing.JFrame {
+public class EChequeBankServerJFrame extends javax.swing.JFrame {
     
     private boolean serverStartFlag;
     private Thread bankServerTread;
+    
     /** Creates new form EChequeBankServer */
-    public EChequeBankServer() {
+    public EChequeBankServerJFrame() {
         initComponents();
         serverStartFlag = false;
     }
@@ -124,12 +126,9 @@ public class EChequeBankServer extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jBStopMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBStopMouseClicked
-// TODO add your handling code here:
-        if(serverStartFlag){
-            
-            try{
-                
-                JOptionPane.showMessageDialog(null,"The Server is going to shutdown","System Information",JOptionPane.INFORMATION_MESSAGE);
+         if(serverStartFlag) {            
+            try{                
+                JOptionPane.showMessageDialog(null, "The Server is going to shutdown", "System Information", JOptionPane.INFORMATION_MESSAGE);
                 bankServerTread.stop();    
                 Thread.sleep(5000);
                 System.exit(0);
@@ -138,33 +137,29 @@ public class EChequeBankServer extends javax.swing.JFrame {
                 
             }
         }
-        else{
-            JOptionPane.showMessageDialog(null,"The Server is not working","System Information",JOptionPane.INFORMATION_MESSAGE);
+        else {
+            JOptionPane.showMessageDialog(null, "The Server is not working", "System Information", JOptionPane.INFORMATION_MESSAGE);
         }
     }//GEN-LAST:event_jBStopMouseClicked
 
     private void jBStartMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBStartMouseClicked
-// TODO add your handling code here:
         if(!serverStartFlag){
             jTBankShell.append("\n\n>> Sever is going to start");
             
             try{
             
-                Runnable runBank = new BankSever();
-                bankServerTread = new Thread(runBank);
+                Runnable bankServer = new BankServer();
+                bankServerTread = new Thread(bankServer);
                 bankServerTread.start();
                 serverStartFlag = true;
                 jTBankShell.append("\n\n>> Sever started");
             }
-            catch(IOException exp){
-                
+            catch(IOException exp) {                
                 JOptionPane.showMessageDialog(null,exp.getMessage(),"Network Error",JOptionPane.ERROR_MESSAGE);
-            }
-            
+            }            
         }
-        else{
+        else {
             JOptionPane.showMessageDialog(null,"The Server is aready running","System Information",JOptionPane.INFORMATION_MESSAGE);
-            
         }
     }//GEN-LAST:event_jBStartMouseClicked
     
@@ -174,7 +169,7 @@ public class EChequeBankServer extends javax.swing.JFrame {
     public static void main(String args[]) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new EChequeBankServer().setVisible(true);
+                new EChequeBankServerJFrame().setVisible(true);
             }
         });
     }
@@ -187,5 +182,4 @@ public class EChequeBankServer extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTextArea jTBankShell;
     // End of variables declaration//GEN-END:variables
-    
 }

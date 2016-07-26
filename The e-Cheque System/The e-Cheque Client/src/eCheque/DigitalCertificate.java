@@ -17,85 +17,69 @@ import java.io.Serializable;
 import java.security.*;
 // this class generates Digital Signature
 
-public class DigitalCertificate implements Serializable
-{
-  private String HolderName;
-  private String Subject ;
-  private String Issuer ;
-  private String SerialNumber;
-  private String ValidFrom;
-  private String ValidTo;
-  private PublicKey publicKey;
-  private byte[] IssuerSignature;
+// this class generates a Digital Certificate
+public class DigitalCertificate implements Serializable { 
+    
+    private String holderName;
+    private String subject ;
+    private String issuer ;
+    private String serialNumber;
+    private String validFrom;
+    private String validTo;
+    private PublicKey publicKey;
+    private byte[] issuerSignature;
     
     /** Creates a new instance of certificate */
-    public DigitalCertificate() {
-    }
-    public void setHolderName(String x)
-    {
-       HolderName= x;
-    }
-    public void setSubject(String x)
-    {
-        Subject= x;
-    }
-    public void setIssuer(String x)
-    {
-        Issuer= x;
-    }
-    public void setSerialNumber(String x)
-    {
-        SerialNumber= x;
-    }
-    public void setValidFrom (String x)
-    {
-        ValidFrom= x;
-    }
-    public void setValidTo (String x)
-    {
-        ValidTo= x;
-    }
-    public void setPublicKey (PublicKey x)
-    {
-        publicKey= x;
-    }
-    public void setIssuerSignature (byte [] x)
-    {
-        IssuerSignature= x;
+    public DigitalCertificate() {        
     }
     
-    public String getHolderName()
-    {
-        return HolderName ;
+    public void setHolderName(String holderName) {
+        this.holderName = holderName;
     }
-     public String getSubject()
-    {
-        return Subject ;
+    public void setSubject(String subject) {
+        this.subject = subject;
     }
-      public String getIssuer()
-    {
-        return Issuer;
+    public void setIssuer(String issuer) {
+        this.issuer = issuer;
     }
-       public String getSerialNumber()
-    {
-        return SerialNumber;
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
     }
-        public String getValidFrom()
-    {
-        return ValidFrom;
+    public void setValidFrom (String validFrom) {
+        this.validFrom = validFrom;
     }
-    public String getValidTo()
-    {
-        return ValidTo;
+    public void setValidTo (String validTo) {
+        this.validTo = validTo;
     }
-    public PublicKey getpublicKey()
-    {
+    public void setPublicKey (PublicKey publicKey) {
+        this.publicKey = publicKey;
+    }
+    public void setIssuerSignature (byte [] issuerSignature) {
+        this.issuerSignature = issuerSignature;
+    }
+    
+    public String getHolderName() {
+        return holderName ;
+    }
+     public String getSubject() {
+        return subject ;
+    }
+    public String getIssuer() {
+        return issuer;
+    }
+    public String getSerialNumber() {
+        return serialNumber;
+    }
+    public String getValidFrom() {
+        return validFrom;
+    }
+    public String getValidTo() {
+        return validTo;
+    }
+    public PublicKey getPublicKey() {
         return publicKey;
     }
-    
-         public byte[] getIssuerSignature()
-    {
-        return IssuerSignature;
+    public byte[] getIssuerSignature() {
+        return issuerSignature;
     }
-     
 }

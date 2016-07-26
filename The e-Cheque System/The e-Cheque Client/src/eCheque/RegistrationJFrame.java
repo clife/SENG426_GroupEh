@@ -11,7 +11,6 @@ package eCheque;
  * @author  Saad
  */
 //import com.Trendy.swing.plaf.TrendyLookAndFeel;
-import com.sun.crypto.provider.AESCipher;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -420,13 +419,13 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                                                         //For Test: JOptionPane.showMessageDialog(null,passTemp);
                                                         
                                                         //create a registeration object to save user registeration data
-                                                        EChequeRegisteration registerationObj = new EChequeRegisteration();
+                                                        EChequeRegistration registerationObj = new EChequeRegistration();
                                                         registerationObj.setBankName(bankName);
                                                         registerationObj.setBankAddress(bankURL);
                                                         registerationObj.setClientName(clientName);
                                                         registerationObj.setAccountNumber(accountNumber);
-                                                        registerationObj.setEWalletLoaction(eWalletPath);
-                                                        registerationObj.setUsername(userNameCode);
+                                                        registerationObj.setEWalletLocation(eWalletPath);
+                                                        registerationObj.setUserName(userNameCode);
                                                         registerationObj.setPasword(passwordCode);
                                                         
                                                         
@@ -443,7 +442,7 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                                                             
                                                             //create AES Key with user password and cipher  
                                                             AESCrypt aesCrypt = new AESCrypt();
-                                                            Key AES128 = aesCrypt.inilizeAESKeyByPassword(passTemp);
+                                                            Key AES128 = aesCrypt.initializeAESKeyByPassword(passTemp);
                                                             Cipher cipher = aesCrypt.initializeCipher(AES128,0);
                                                             InputStream in = new FileInputStream(eWalletPath+"\\Security Tools\\privateKey.key");
                                                             OutputStream out = new FileOutputStream(eWalletPath+"\\Security Tools\\Private Key.key"); 
@@ -466,11 +465,11 @@ public class RegistrationJFrame extends javax.swing.JFrame {
                                                             
                                                             // save the user digital certificate
                                                             DigitalCertificateIO dcIO = new DigitalCertificateIO();
-                                                            dcIO.SaveDC(dcObj,eWalletPath+"\\Security Tools\\"+registerationObj.getClientName()+"DigCert.edc");
+                                                            dcIO.saveDigitalCertificate(dcObj,eWalletPath+"\\Security Tools\\"+registerationObj.getClientName()+"DigCert.edc");
                                                             
                                                                                                                 
                                                             //Connect to the bank server to activate the e-cheque account.
-                                                            Runnable client = new EchequeClient(8189,0,registerationObj.getBankAddress(),registerationObj,
+                                                            Runnable client = new EChequeClient(8189,0,registerationObj.getBankAddress(),registerationObj,
                                                                     dcObj);
                                                             Thread t = new Thread(client);
                                                             t.start();

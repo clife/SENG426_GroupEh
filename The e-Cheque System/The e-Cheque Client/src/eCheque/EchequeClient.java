@@ -22,10 +22,9 @@ import javax.crypto.Cipher;
 import javax.crypto.NoSuchPaddingException;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
-import org.omg.CORBA.TRANSIENT;
 
 
-public class EchequeClient implements Runnable{
+public class EChequeClient implements Runnable{
     
     /** Creates a new instance of EchequeClient */
 
@@ -35,7 +34,7 @@ private ObjectOutputStream SocketOutputObject;
 private InputStream SocketInput;
 private OutputStream SocketOutput;
 private DigitalCertificate clientCerit;
-private EChequeRegisteration registrationData;
+private EChequeRegistration registrationData;
 private ECheque depositCheque;
 private JTextArea screenShell;
 private Key sessionKey;
@@ -50,7 +49,7 @@ private boolean getProcessConnection;
 private boolean bankConnection;
 
 
-public EchequeClient(JTextArea screen , DigitalCertificate DC,Key aesKey,String wPath, String cPath, String host, int port){
+public EChequeClient(JTextArea screen , DigitalCertificate DC,Key aesKey,String wPath, String cPath, String host, int port){
 
     screenShell = screen;
     clientCerit = DC;
@@ -65,7 +64,7 @@ public EchequeClient(JTextArea screen , DigitalCertificate DC,Key aesKey,String 
     bankConnection = false;
 }
 
-public EchequeClient(int port, int mode, String host, EChequeRegisteration register, DigitalCertificate DC){
+public EChequeClient(int port, int mode, String host, EChequeRegistration register, DigitalCertificate DC){
         
      portID = port;
      bankmode = mode;
@@ -76,7 +75,7 @@ public EchequeClient(int port, int mode, String host, EChequeRegisteration regis
    
 }
 
-public EchequeClient(int port, int mode, String host,EChequeRegisteration register, ECheque chq){
+public EChequeClient(int port, int mode, String host,EChequeRegistration register, ECheque chq){
     portID = port;
     bankmode = mode;
     hostname= host;
@@ -118,7 +117,7 @@ private void processConnection()throws IOException,Exception,ClassNotFoundExcept
              
              //send session key
              Cipher cipher = Cipher.getInstance("RSA");
-             cipher.init(Cipher.WRAP_MODE, serverCerit.getpublicKey());
+             cipher.init(Cipher.WRAP_MODE, serverCerit.getPublicKey());
              byte[] wrappedKey = cipher.wrap(sessionKey);
              int keyLength = wrappedKey.length;
              

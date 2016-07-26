@@ -2,4 +2,24 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/1"/>
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
+    <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
+        <group>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/ReceiveChequeJFrame.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/AESCrypt.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/DigitalCertificateIO.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/ECheque.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/EBankingJFrame.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/SendChequeJFrame.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/DigitalCertificate.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/EChequeServer.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/EChequeIO.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/DigitalSignature.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/nbproject/build-impl.xml</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/RegistrationJFrame.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/ChequeJFrame.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/ElectronicChequeJFrame.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/EChequeRegistration.java</file>
+            <file>file:/C:/Users/trist/SENG426_GroupEh/SENG426_GroupEh/The%20e-Cheque%20System/The%20e-Cheque%20Client/src/eCheque/EChequeClient.java</file>
+        </group>
+    </open-files>
 </project-private>

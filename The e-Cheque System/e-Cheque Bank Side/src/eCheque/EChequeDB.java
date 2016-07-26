@@ -5,6 +5,11 @@
  *
  * To change this template, choose Tools | Template Manager
  * and open the template in the editor.
+ *
+ * @author Saad
+ *
+ * Fixed & Updated July 25th, 2016
+ * By Tristan Lucas
  */
 
 package eCheque;
@@ -15,33 +20,25 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.DriverManager;
 import javax.swing.JOptionPane;
-import javax.swing.JTextArea;
-
-/**
- *
- * @author Saad
- */
-
 
 public class EChequeDB {
     
-    private static final String JDBC_DRIVER ="com.mysql.jdbc.Driver";   
+    private static final String JDBC_DRIVER = "com.mysql.jdbc.Driver";   
     private static final String DATABASE_URL = "jdbc:mysql://localhost/ebank";
     private String userName;
     private String password;
     private Connection connection = null; 
-    private Statement  sqlStatement = null; 
+    private Statement sqlStatement = null; 
     private int databaseMode;
     private ResultSet resultSet;    
     
     /** Creates a new instance of EChequeDB */
     public EChequeDB() {
-        userName ="seng426";
-        password="log2IT05";
-        
+        userName = "seng426";
+        password = "log2IT05";        
     }
     
-    private boolean connectToDataBase()throws ClassNotFoundException, SQLException{
+    private boolean connectToDataBase() throws ClassNotFoundException, SQLException {
          // Initialize Connection to DB:
          Class.forName(JDBC_DRIVER); // load database driver class
          // establish connection to database                              
@@ -64,143 +61,112 @@ public class EChequeDB {
         }
     }
     
-    private boolean createStatment()throws SQLException{
-        
+    private boolean createStatement()throws SQLException{        
         sqlStatement = connection.createStatement();
         return true;
     }
     
-    private void executeSQLStatment(String statment, int statType) throws SQLException{
-        
-        // Initialize sql statment and excute it.
-        
-        if(statType == 0){
-            resultSet = sqlStatement.executeQuery(statment);
-            
+    private void executeSQLStatement(String statement, int statementType) throws SQLException{        
+        // Initialize sql statment and excute it.        
+        if(statementType == 0){
+            resultSet = sqlStatement.executeQuery(statement);            
         }
-        if(statType==1){
-            sqlStatement.executeUpdate(statment);
-        }
-    
+        if(statementType == 1){
+            sqlStatement.executeUpdate(statement);
+        }    
     }
     
-    public boolean runDB(int mode, String databaseStat){
+    public boolean runDatabase(int mode, String databaseStatement){
+        
         databaseMode = mode;
         boolean flag= false;
+        
         try{
             connectToDataBase();
             //JOptionPane.showMessageDialog(null,"You are connected to e-Cheque Bank DB","DB State",JOptionPane.INFORMATION_MESSAGE);
-            createStatment();
+            createStatement();
             //JOptionPane.showMessageDialog(null,"You have created statment","DB State",JOptionPane.INFORMATION_MESSAGE);
                  
             // run the specific sql statment
-            executeSQLStatment(databaseStat,databaseMode);
+            executeSQLStatement(databaseStatement, databaseMode);
             flag = true;
         }
         catch(ClassNotFoundException exp){
             //JOptionPane.showMessageDialog(null,exp.getMessage(),"DB Error",JOptionPane.ERROR_MESSAGE);
-            exp.printStackTrace();
-            
+            exp.printStackTrace();            
         }
         catch(SQLException exp){
             //JOptionPane.showMessageDialog(null,exp.getMessage(),"DB Error",JOptionPane.ERROR_MESSAGE);
-            exp.printStackTrace();
-                    
+            exp.printStackTrace();                    
         }
-        finally{
-            
-            closeDataBaseConnection();
-            if(flag)
-                return true;
-            else
-                return false;
+        finally{            
+            closeDataBaseConnection();            
         }         
+        return flag;
     }
     
-    public boolean runDB(int mode, String databaseStat, double[]balance){
+    public boolean runDatabase(int mode, String databaseStatement, double[] balance){
+        
         databaseMode = mode;
         boolean flag= false;
         
         try{
             connectToDataBase();
-            JOptionPane.showMessageDialog(null,"You are connected to e-Cheque Bank DB","DB State",JOptionPane.INFORMATION_MESSAGE);
-            createStatment();
-            JOptionPane.showMessageDialog(null,"You have created statment","DB State",JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(null, "You are connected to e-Cheque Bank Database", "Database Statement", JOptionPane.INFORMATION_MESSAGE);
+            createStatement();
+            JOptionPane.showMessageDialog(null, "You have created a statement", "Database Statement", JOptionPane.INFORMATION_MESSAGE);
                  
             // run the specific sql statment
-            executeSQLStatment(databaseStat,databaseMode);
+            executeSQLStatement(databaseStatement, databaseMode);
             if(resultSet.next()){
-                balance[0] =resultSet.getDouble(1);
+                balance[0] = resultSet.getDouble(1);
                 flag = true;
             }
             else{
-                balance[0]=0.0;
+                balance[0] = 0.0;
                 flag = false;
-             }            
-            
-            
-            
+            }     
         }
         catch(ClassNotFoundException exp){
-            JOptionPane.showMessageDialog(null,exp.getMessage(),"DB Error",JOptionPane.ERROR_MESSAGE);
-            exp.printStackTrace();
-            
+            JOptionPane.showMessageDialog(null, exp.getMessage(), "Database Error",JOptionPane.ERROR_MESSAGE);
+            exp.printStackTrace();            
         }
         catch(SQLException exp){
-            JOptionPane.showMessageDialog(null,exp.getMessage(),"DB Error",JOptionPane.ERROR_MESSAGE);
-            exp.printStackTrace();
-                    
+            JOptionPane.showMessageDialog(null, exp.getMessage(), "Database Error",JOptionPane.ERROR_MESSAGE);
+            exp.printStackTrace();                    
         }
-        finally{
-            
+        finally{            
             closeDataBaseConnection();
-            if(flag)
-                return true;
-            else
-                return false;
         }         
+        return flag;
     }
     
-    public boolean runDB(String databaseStat, int mode){
-        databaseMode = mode;
-        boolean flag= false;
-        
-        try{
-            connectToDataBase();
-            JOptionPane.showMessageDialog(null,"You are connected to e-Cheque Bank DB","DB State",JOptionPane.INFORMATION_MESSAGE);
-            createStatment();
-            JOptionPane.showMessageDialog(null,"You have created statment","DB State",JOptionPane.INFORMATION_MESSAGE);
-                 
-            // run the specific sql statment
-            executeSQLStatment(databaseStat,databaseMode);
-            if(resultSet.next()){
-                 flag = true;
-            }
-            else{
-                 flag = false;
-             }            
-            
-            
-            
-        }
-        catch(ClassNotFoundException exp){
-            JOptionPane.showMessageDialog(null,exp.getMessage(),"DB Error",JOptionPane.ERROR_MESSAGE);
-            exp.printStackTrace();
-            
-        }
-        catch(SQLException exp){
-            JOptionPane.showMessageDialog(null,exp.getMessage(),"DB Error",JOptionPane.ERROR_MESSAGE);
-            exp.printStackTrace();
-                    
-        }
-        finally{
-            
-            closeDataBaseConnection();
-            if(flag)
-                return true;
-            else
-                return false;
-        }         
-    }
-
+//    public boolean runDatabase(String databaseStatement, int mode){
+//        
+//        databaseMode = mode;
+//        boolean flag= false;
+//        
+//        try{
+//            connectToDataBase();
+//            //JOptionPane.showMessageDialog(null,"You are connected to e-Cheque Bank DB","DB State",JOptionPane.INFORMATION_MESSAGE);
+//            createStatement();
+//            //JOptionPane.showMessageDialog(null,"You have created statment","DB State",JOptionPane.INFORMATION_MESSAGE);
+//                 
+//            // run the specific sql statment
+//            executeSQLStatement(databaseStatement, databaseMode);
+//            flag = true;
+//        }
+//        catch(ClassNotFoundException exp){
+//            //JOptionPane.showMessageDialog(null,exp.getMessage(),"DB Error",JOptionPane.ERROR_MESSAGE);
+//            exp.printStackTrace();            
+//        }
+//        catch(SQLException exp){
+//            //JOptionPane.showMessageDialog(null,exp.getMessage(),"DB Error",JOptionPane.ERROR_MESSAGE);
+//            exp.printStackTrace();                    
+//        }
+//        finally{            
+//            closeDataBaseConnection();            
+//        }         
+//        return flag;
+//    }
 }

@@ -31,7 +31,7 @@ public class ElectronicChequeJFrame extends javax.swing.JFrame {
     private EBankingJFrame eBankingWindow;
     private ChequeJFrame eChequeWindow;
     private SendChequeJFrame sendChequeWindow;
-    private EChequeRegisteration registerdUser;
+    private EChequeRegistration registerdUser;
     private ReceiveChequeJFrame receiveChequeWindow;
     private String userName;
     private String passTemp;
@@ -340,7 +340,7 @@ public class ElectronicChequeJFrame extends javax.swing.JFrame {
             } 
         }
         
-        if(userName.hashCode()== registerdUser.getUsername()&& userName.length()!=0){
+        if(userName.hashCode()== registerdUser.getUserName()&& userName.length()!=0){
             
             if(passTemp.hashCode()==registerdUser.getPasword()&& passTemp.length()!=0){
                 
@@ -356,23 +356,23 @@ public class ElectronicChequeJFrame extends javax.swing.JFrame {
              
                         //create AES Key with user password and cipher  
                         AESCrypt aesCrypt = new AESCrypt();
-                        Key AES128 = aesCrypt.inilizeAESKeyByPassword(passTemp);
+                        Key AES128 = aesCrypt.initializeAESKeyByPassword(passTemp);
                         Cipher cipher = aesCrypt.initializeCipher(AES128,1);
-                        InputStream in = new FileInputStream(registerdUser.getEWalletLoaction()+"\\Security Tools\\Private Key.key");
-                        OutputStream out = new FileOutputStream(registerdUser.getEWalletLoaction()+"\\Security Tools\\PrivateKey.key"); 
+                        InputStream in = new FileInputStream(registerdUser.getEWalletLocation()+"\\Security Tools\\Private Key.key");
+                        OutputStream out = new FileOutputStream(registerdUser.getEWalletLocation()+"\\Security Tools\\PrivateKey.key"); 
                                   
                         // decrypt the private key with the AES key and delete the plain key
                         aesCrypt.crypt(in,out,cipher);
                         in.close();
                         out.close();
-                        ObjectInputStream objIn = new ObjectInputStream (new FileInputStream(registerdUser.getEWalletLoaction()+"\\Security Tools\\PrivateKey.key"));
+                        ObjectInputStream objIn = new ObjectInputStream (new FileInputStream(registerdUser.getEWalletLocation()+"\\Security Tools\\PrivateKey.key"));
                                   
                         //load the user private key.
                         privKey = (PrivateKey)objIn.readObject();
                         objIn.close();
          
                         // delete the un secure key.
-                        File control = new File(registerdUser.getEWalletLoaction()+"\\Security Tools\\PrivateKey.key");
+                        File control = new File(registerdUser.getEWalletLocation()+"\\Security Tools\\PrivateKey.key");
                         control.delete();
                         receiveChequeWindow = new ReceiveChequeJFrame(registerdUser,privKey);
                         privateKeyFlag = true;
@@ -401,9 +401,9 @@ public class ElectronicChequeJFrame extends javax.swing.JFrame {
     
     private void loadUserInfo(){
         try{
-           registerdUser = new EChequeRegisteration();
+           registerdUser = new EChequeRegistration();
            ObjectInputStream readObj = new ObjectInputStream(new FileInputStream("Config.epc"));
-           registerdUser = (EChequeRegisteration)readObj.readObject();
+           registerdUser = (EChequeRegistration)readObj.readObject();
            activationNeed = false;
            jBActivaton.setEnabled(true);
            jTUserName.setEnabled(true);
