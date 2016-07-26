@@ -2,15 +2,12 @@
  * ElectronicChequeJFrame.java
  *
  * Created on May 4, 2007, 5:29 PM
+ *
+ * @author  Sherif Saad
  */
 
 package eCheque;
 
-/**
- *
- * @author  Sherif Saad
- */
-//import com.Trendy.swing.plaf.TrendyLookAndFeel;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -26,44 +23,41 @@ import java.io.File;
 import java.security.PrivateKey;
 
 public class ElectronicChequeJFrame extends javax.swing.JFrame {
-    
-    private RegistrationJFrame eChqueConfigureWindow;
-    private EBankingJFrame eBankingWindow;
-    private ChequeJFrame eChequeWindow;
-    private SendChequeJFrame sendChequeWindow;
-    private EChequeRegistration registerdUser;
-    private ReceiveChequeJFrame receiveChequeWindow;
-    private String userName;
-    private String passTemp;
-    private PrivateKey privKey;
-    private boolean privateKeyFlag;
-    private boolean activationDone;
-    private boolean activationNeed;
-    /** Creates new form ElectronicChequeJFrame */
-    public ElectronicChequeJFrame() {
-       try{
-            //TrendyLookAndFeel tlf = new TrendyLookAndFeel();
-            //tlf.setCurrentTheme( new com.Trendy.swing.plaf.Themes.TrendyOrangeTheme());
-            //UIManager.setLookAndFeel(tlf);
-            UIManager.setLookAndFeel(
-            UIManager.getSystemLookAndFeelClassName());
-        }
-        catch(Exception e){
-            
-            //JOptionPane.showMessageDialog(null,"System Error", "can not found themes", JOptionPane.ERROR_MESSAGE);
-        
-        }    
-        
-        initComponents();
-        activationDone = false;
-        loadUserInfo();
-        eChqueConfigureWindow = new RegistrationJFrame();
-        eChequeWindow = new ChequeJFrame(registerdUser);
-        sendChequeWindow = new SendChequeJFrame(registerdUser);
-        eBankingWindow = new EBankingJFrame(registerdUser);
-        privateKeyFlag = false;
-        
-    }
+
+	private RegistrationJFrame eChqueConfigureWindow;
+	private EBankingJFrame eBankingWindow;
+	private ChequeJFrame eChequeWindow;
+	private SendChequeJFrame sendChequeWindow;
+	private EChequeRegistration registerdUser;
+	private ReceiveChequeJFrame receiveChequeWindow;
+	private String userName;
+	private String passTemp;
+	private PrivateKey privKey;
+	private boolean privateKeyFlag;
+	private boolean activationDone;
+	private boolean activationNeed;
+	
+	
+	public ElectronicChequeJFrame() {
+	/* Unhandled exception
+	try{
+	UIManager.setLookAndFeel(
+	UIManager.getSystemLookAndFeelClassName());
+	}
+	catch(Exception e){
+
+	//JOptionPane.showMessageDialog(null,"System Error", "can not found themes", JOptionPane.ERROR_MESSAGE);
+
+	}*/
+		initComponents();
+		activationDone = false;
+		loadUserInfo();
+		eChqueConfigureWindow = new RegistrationJFrame();
+		eChequeWindow = new ChequeJFrame(registerdUser);
+		sendChequeWindow = new SendChequeJFrame(registerdUser);
+		eBankingWindow = new EBankingJFrame(registerdUser);
+		privateKeyFlag = false;
+	}
     
     /** This method is called from within the constructor to
      * initialize the form.
@@ -283,149 +277,159 @@ public class ElectronicChequeJFrame extends javax.swing.JFrame {
         java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
         setBounds((screenSize.width-465)/2, (screenSize.height-541)/2, 465, 541);
     }// </editor-fold>//GEN-END:initComponents
+	 
+	 
+	private void jBConfigureActionPerformed(java.awt.event.ActionEvent evt) {
+		//GEN-FIRST:event_jBConfigureActionPerformed
+		// TODO add your handling code here:
+		if(activationNeed) {
+			eChqueConfigureWindow.setVisible(true);
+		}
+		else if(activationDone) {
+		eChqueConfigureWindow.setVisible(true);
+		}
+		
+	}//GEN-LAST:event_jBConfigureActionPerformed
+	
+	
+	private void jBEBankingActionPerformed(java.awt.event.ActionEvent evt) {
+		//GEN-FIRST:event_jBEBankingActionPerformed
+		// TODO add your handling code here:
+		if(activationDone) {
+			eBankingWindow.setVisible(true);
+		}
+	}//GEN-LAST:event_jBEBankingActionPerformed
+	
+	
+	private void jBReceivedChequeMouseClicked(java.awt.event.MouseEvent evt) {
+		//GEN-FIRST:event_jBReceivedChequeMouseClicked
+		// TODO add your handling code here:
+		if(activationDone) {
+			receiveChequeWindow.setVisible(true);
+		}
+	}//GEN-LAST:event_jBReceivedChequeMouseClicked
+	
+	
+	private void jBSendChequeMouseClicked(java.awt.event.MouseEvent evt) {
+		//GEN-FIRST:event_jBSendChequeMouseClicked
+		// TODO add your handling code here:
+		if(activationDone) {
+			sendChequeWindow.setVisible(true);
+		}
+	}//GEN-LAST:event_jBSendChequeMouseClicked
+	
+	
+	private void jBDrawChequeMouseClicked(java.awt.event.MouseEvent evt) {
+		//GEN-FIRST:event_jBDrawChequeMouseClicked
+		// TODO add your handling code here:
+		if(activationDone) {
+			eChequeWindow.setVisible(true);
+		}
+	}//GEN-LAST:event_jBDrawChequeMouseClicked
+	
+	
+	private void jBActivatonMouseClicked(java.awt.event.MouseEvent evt) {
+		//GEN-FIRST:event_jBActivatonMouseClicked
+		// TODO add your handling code here:
+		char password[];
+		password = jTPassword.getPassword();
+		
+		passTemp = "";
+		userName = jTUserName.getText();
+		
+		if((password.length >= 8) && (password.length < 16)) {
+		
+			for(int i=0; i<password.length; i++) {
+				passTemp += password[i];
+			}
+			int pad = 16 - password.length;
+			for(int i=0; i<pad; i++) {
+				passTemp += password[i];
+			}
+		}
+		
+		if((userName.hashCode() == registerdUser.getUserName()) && (userName.length() != 0)) {
+			
+			if((passTemp.hashCode() == registerdUser.getPasword()) && (passTemp.length()!=0)) {
+				
+				jBConfigure.setEnabled(true);
+				jBEBanking.setEnabled(true);
+				jBDrawCheque.setEnabled(true);
+				jBSendCheque.setEnabled(true);
+				jBReceivedCheque.setEnabled(true);
+				
+				try {
+					
+					if(!privateKeyFlag) {
+						
+						//create AES Key with user password and cipher  
+						AESCrypt aesCrypt = new AESCrypt();
+						Key AES128 = aesCrypt.initializeAESKeyByPassword(passTemp);
+						Cipher cipher = aesCrypt.initializeCipher(AES128, 1);
+						InputStream in = new FileInputStream(registerdUser.getEWalletLocation() + "\\Security Tools\\Private Key.key");
+						OutputStream out = new FileOutputStream(registerdUser.getEWalletLocation() + "\\Security Tools\\PrivateKey.key"); 
+						
+						// decrypt the private key with the AES key and delete the plain key
+						aesCrypt.crypt(in,out,cipher);
+						in.close();
+						out.close();
+						ObjectInputStream objIn = new ObjectInputStream (new FileInputStream(registerdUser.getEWalletLocation() + "\\Security Tools\\PrivateKey.key"));
+						
+						//load the user private key.
+						privKey = (PrivateKey)objIn.readObject();
+						objIn.close();
+						
+						// delete the un secure key.
+						File control = new File(registerdUser.getEWalletLocation() + "\\Security Tools\\PrivateKey.key");
+						control.delete();
+						
+						receiveChequeWindow = new ReceiveChequeJFrame(registerdUser, privKey);
+						privateKeyFlag = true;
+						activationDone = true;
+						JOptionPane.showMessageDialog(null, "Welcome " + registerdUser.getClientName(), "Welcome Message", JOptionPane.INFORMATION_MESSAGE);
+					}
+				}
+				catch(Exception exp) {
+					JOptionPane.showMessageDialog(null, "One of your security keys is invalid");
+				}
+			}
+			else {
+				// Invalid password
+				JOptionPane.showMessageDialog(null, "Invalid user name or password", "Access Denied",  JOptionPane.INFORMATION_MESSAGE);
+			}
+		}
+		else {
+			// Invalid user name
+			JOptionPane.showMessageDialog(null, "Invalid user name or password", "Access Denied",  JOptionPane.INFORMATION_MESSAGE);
+		}
 
-    private void jBConfigureActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBConfigureActionPerformed
-// TODO add your handling code here:
-        if(activationNeed)
-            eChqueConfigureWindow.setVisible(true);
-        else if(activationDone)
-               eChqueConfigureWindow.setVisible(true);
-         
-    }//GEN-LAST:event_jBConfigureActionPerformed
+	}//GEN-LAST:event_jBActivatonMouseClicked
+	
+	
+	private void loadUserInfo() {
+		try {
+			registerdUser = new EChequeRegistration();
+			ObjectInputStream readObj = new ObjectInputStream(new FileInputStream("Config.epc"));
+			registerdUser = (EChequeRegistration)readObj.readObject();
+			activationNeed = false;
+			jBActivaton.setEnabled(true);
+			jTUserName.setEnabled(true);
+			jTPassword.setEnabled(true);
+		}
+		catch(IOException exp) {
+			JOptionPane.showMessageDialog(null, "Your e-Cheque System is not configured yet.\nYou have to configure it first", "System Configuration", JOptionPane.INFORMATION_MESSAGE);
+			jBActivaton.setEnabled(true);
+			jTPassword.setEnabled(false);
+			jTUserName.setEnabled(false);
+			jBConfigure.setEnabled(true);
+			activationNeed = true;
+		}
+		catch(ClassNotFoundException exp) {
+			exp.printStackTrace();
+		}
+	}
 
-    private void jBEBankingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBEBankingActionPerformed
-// TODO add your handling code here:
-        if(activationDone)
-        eBankingWindow.setVisible(true);
-    }//GEN-LAST:event_jBEBankingActionPerformed
 
-    private void jBReceivedChequeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBReceivedChequeMouseClicked
-// TODO add your handling code here:
-        if(activationDone)
-        receiveChequeWindow.setVisible(true);
-             
-    }//GEN-LAST:event_jBReceivedChequeMouseClicked
-
-    private void jBSendChequeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBSendChequeMouseClicked
-// TODO add your handling code here:
-        if(activationDone)
-        sendChequeWindow.setVisible(true);
-    }//GEN-LAST:event_jBSendChequeMouseClicked
-
-    private void jBDrawChequeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBDrawChequeMouseClicked
-// TODO add your handling code here:
-        if(activationDone)
-        eChequeWindow.setVisible(true);
-    }//GEN-LAST:event_jBDrawChequeMouseClicked
-
-    private void jBActivatonMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jBActivatonMouseClicked
-    // TODO add your handling code here:
-        passTemp="";
-        userName = jTUserName.getText();
-        char password[];
-         
-       
-        password = jTPassword.getPassword();
-        if(password.length >=8 && password.length <16){
-        
-            for(int i=0; i<password.length; i++){
-                passTemp+=password[i];
-            }
-        
-            if(password.length < 16){
-            int pad = 16 - password.length;
-                for(int i=0; i<pad; i++){
-                   passTemp+=password[i];
-                }  
-            } 
-        }
-        
-        if(userName.hashCode()== registerdUser.getUserName()&& userName.length()!=0){
-            
-            if(passTemp.hashCode()==registerdUser.getPasword()&& passTemp.length()!=0){
-                
-                jBConfigure.setEnabled(true);
-                jBEBanking.setEnabled(true);
-                jBDrawCheque.setEnabled(true);
-                jBSendCheque.setEnabled(true);
-                jBReceivedCheque.setEnabled(true);
-                
-                try {
-                    
-                        if(!privateKeyFlag){
-             
-                        //create AES Key with user password and cipher  
-                        AESCrypt aesCrypt = new AESCrypt();
-                        Key AES128 = aesCrypt.initializeAESKeyByPassword(passTemp);
-                        Cipher cipher = aesCrypt.initializeCipher(AES128,1);
-                        InputStream in = new FileInputStream(registerdUser.getEWalletLocation()+"\\Security Tools\\Private Key.key");
-                        OutputStream out = new FileOutputStream(registerdUser.getEWalletLocation()+"\\Security Tools\\PrivateKey.key"); 
-                                  
-                        // decrypt the private key with the AES key and delete the plain key
-                        aesCrypt.crypt(in,out,cipher);
-                        in.close();
-                        out.close();
-                        ObjectInputStream objIn = new ObjectInputStream (new FileInputStream(registerdUser.getEWalletLocation()+"\\Security Tools\\PrivateKey.key"));
-                                  
-                        //load the user private key.
-                        privKey = (PrivateKey)objIn.readObject();
-                        objIn.close();
-         
-                        // delete the un secure key.
-                        File control = new File(registerdUser.getEWalletLocation()+"\\Security Tools\\PrivateKey.key");
-                        control.delete();
-                        receiveChequeWindow = new ReceiveChequeJFrame(registerdUser,privKey);
-                        privateKeyFlag = true;
-                        activationDone = true;
-                        JOptionPane.showMessageDialog(null,"Welcome "+registerdUser.getClientName(),"Welcome Message",JOptionPane.INFORMATION_MESSAGE);
-                        
-                        }
-                                
-                }
-                catch(Exception exp){
-                    JOptionPane.showMessageDialog(null,"One of your security key is invaild");
-                }
-            }
-            else{
-                //invaild password
-                JOptionPane.showMessageDialog(null,"Invaild user name or password","Access Denied", JOptionPane.INFORMATION_MESSAGE);
-            }
-                
-        }
-        else{
-            //invaild user name
-            JOptionPane.showMessageDialog(null,"Invaild user name or password","Access Denied", JOptionPane.INFORMATION_MESSAGE);
-        }
-  
-    }//GEN-LAST:event_jBActivatonMouseClicked
-    
-    private void loadUserInfo(){
-        try{
-           registerdUser = new EChequeRegistration();
-           ObjectInputStream readObj = new ObjectInputStream(new FileInputStream("Config.epc"));
-           registerdUser = (EChequeRegistration)readObj.readObject();
-           activationNeed = false;
-           jBActivaton.setEnabled(true);
-           jTUserName.setEnabled(true);
-           jTPassword.setEnabled(true);
-        
-            
-        }
-        catch(IOException exp){
-            JOptionPane.showMessageDialog(null,"Your e-Cheque System is not Configured Yet\nYou have to configure it first","System Configureation",
-                    JOptionPane.INFORMATION_MESSAGE);
-            jBActivaton.setEnabled(true);
-            jTPassword.setEnabled(false);
-            jTUserName.setEnabled(false);
-            jBConfigure.setEnabled(true);
-            activationNeed = true;
-        }
-        catch(ClassNotFoundException exp){
-            exp.printStackTrace();
-            
-        }
-        
-    }
     /**
      * @param args the command line arguments
      */
